@@ -35,7 +35,7 @@ app.use((req, res) => {
     console.log(res.data);
     if (!res.data) {
         return res.status(404).send({
-            status: false,
+            ok: false,
             error: {
                 reason: 'Invalid Endpoint',
                 code: 404
@@ -52,7 +52,7 @@ app.use((req, res) => {
         });
     };
     return res.status(res.data.status || 200).send({
-        status: true,
+        ok: true,
         response: res.data
     })
 });
