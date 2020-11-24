@@ -1,0 +1,102 @@
+const mongoose = require('mongoose');
+
+const evfsSchema = mongoose.Schema({
+    personnelDetails: {
+        reference_no: String,
+        employer_id: String,
+        contact_no: String,
+        first_name: String,
+        middle_name: String,
+        last_name: String,
+        father_name: String,
+        dateofbirth: Date,
+        gender: {
+            type: String,
+            enum: ['male', 'female', 'transgender']
+        },
+        marital_status: String,
+        nationality: String,
+        alternate_contact: String,
+        email_id: String,
+    },
+    contactDetails: {
+        permanent_address: String,
+        pin_code: String,
+        district: String,
+        state: String,
+        start_of_stay: String,
+        end_of_stay: String,
+        current_address: String,
+        current_pin_code: String,
+        current_district: String,
+        current_state: String,
+        current_start_of_stay: String,
+        current_end_of_stay: String,
+        previous_address: String,
+        previous_pin_code: String,
+        previous_district: String,
+        previous_state: String,
+        previous_start_of_stay: String,
+        previous_end_of_stay: String,
+        past_address: String,
+        past_pin_code: String,
+        past_district: String,
+        past_state: String,
+        past_start_of_stay: String,
+        past_end_of_stay: String,
+    },
+    educationDetails: [{
+        institute_name: String,
+        location: String,
+        roll_or_reg: String,
+        course: String,
+        course_begin_year: String,
+        year_of_passing: String,
+        class_or_percentage: String,
+        university_board_name: String,
+        document: {
+            type: String,
+            trim: true,
+        },
+        document_name: String,
+    }],
+    employmentVerificationDetails: [{
+        company_name: String,
+        company_address: String,
+        company_pin_code: String,
+        company_district: String,
+        company_state: String,
+        company_salary: String,
+        company_reason_for_leaving: String,
+        company_designation: String,
+        company_start_date: Date,
+        company_end_date: Date,
+        comapny_employee_id: String,
+        company_supervisor_name: String,
+        company_supervisor_email: String,
+        company_supervisor_contact: String,
+        company_hr_email: String,
+        document: {
+            type: String,
+            trim: true,
+        },
+        document_name: String,
+    }],
+    identityVerificationDetails: [{
+        id_type: {
+            type: String,
+            enum: ['pan_card', 'adhar', 'voter_id', 'driving_licence', 'passport']
+        },
+        id_number: String,
+        date_of_issue: Date,
+        date_of_expiry: Date,
+        place_of_issue: String,
+        document: {
+            type: String,
+            trim: true,
+        },
+        document_name: String,
+    }]
+});
+
+module.exports = mongoose.model('evfs', evfsSchema);

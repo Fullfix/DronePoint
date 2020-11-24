@@ -1,0 +1,8 @@
+POST http://localhost:3000/auth/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZTQ3YWQ4MmNjNWEyNTBiYjJiMzc3NiIsImlhdCI6MTU5MjAzMjAzNn0.bYe4nTxP5v6QGdG575dGlj9eqCSbzRP5DMiCT4xSdw0
+
+{
+    "username": "fullfi2x23",
+    "password": "123"
+}
