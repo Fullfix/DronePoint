@@ -40,8 +40,8 @@ router.post('/signup', (req, res, next) => {
 });
 
 // example
-router.post('/', passport.authenticate('jwt'), (req, res, next) => {
-    res.data = { message: 'Authenticated successfully' };
+router.get('/me', passport.authenticate('jwt'), (req, res, next) => {
+    res.data = { user: req.user };
     next();
 });
 

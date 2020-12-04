@@ -13,7 +13,7 @@ export default UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
-    axios.defaults.headers.common['Authorization'] = token;
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
     const logout = () => {
         localStorage.removeItem('Authorization');
@@ -32,17 +32,6 @@ export default UserProvider = ({ children }) => {
         }
         if (loading) fetchUser();
     }, [loading]);
-
-    if (loading) {
-        return (
-            <div>Loading...</div>
-        )
-    }
-    if (!user) {
-        return (
-            <Redirect to="/login"/>
-        )
-    }
 
     return (
         <UserContext.Provider value={{
