@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 export const UserContext = createContext({
@@ -9,7 +8,7 @@ export const UserContext = createContext({
     logout: () => {},
 })
 
-export default UserProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
