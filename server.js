@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 
 const auth = require('./routes/auth');
 const order = require('./routes/order');
+const dronepoint = require('./routes/dronepoint');
 
 const passport = require('./config/passport');
 require('dotenv/config');
@@ -32,6 +33,7 @@ app.use(flash());
 
 app.use('/auth', auth);
 app.use('/order', order);
+app.use('/dronepoint', dronepoint);
 
 // handling response
 app.use((req, res) => {
