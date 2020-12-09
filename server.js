@@ -8,7 +8,10 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
+
 const auth = require('./routes/auth');
+const order = require('./routes/order');
+
 const passport = require('./config/passport');
 require('dotenv/config');
 
@@ -28,6 +31,7 @@ app.use(passport.session());
 app.use(flash());
 
 app.use('/auth', auth);
+app.use('/order', order);
 
 // handling response
 app.use((req, res) => {
