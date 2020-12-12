@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Link, Paper, Typography, useMediaQuery } from '@material-ui/core';
+import { Box, Button, Container, Grid, Link, Paper, Typography, useMediaQuery } from '@material-ui/core';
 import React from 'react';
 import { CLIENT_URL } from '../../utils/api';
 
@@ -67,13 +67,19 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                         <Typography variant="h3">Заказать</Typography>
                     </Button>
                 </Box>}
-                {order && <Box width="500px">
-                    <Typography variant="h2"align="center">Заказ оформлен</Typography>
-                    <Box border="2px solid black" padding={1} marginTop={1}>
-                        <Link href={`/order/${order._id}`} color="secondary">
-                            {`${CLIENT_URL}/order/${order._id}`}
-                        </Link>
-                    </Box>
+                {order && <Box className="order-link">
+                    <Typography variant="h2" align="center">Заказ оформлен</Typography>
+                    <Grid container justify="center">
+                        <Grid item xs={10} sm={10}>
+                            <Box border="2px solid black" padding={1} marginTop={1}>
+                                <Link href={`/order/${order._id}`} color="secondary">
+                                    <Typography style={{ wordWrap: 'break-word' }}>
+                                        {`${CLIENT_URL}/order/${order._id}`}
+                                    </Typography>
+                                </Link>
+                            </Box>
+                        </Grid>
+                    </Grid>
                     <Box marginTop={2}>
                         <Grid container justify="center">
                             <Grid item>

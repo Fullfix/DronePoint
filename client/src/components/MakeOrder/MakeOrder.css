@@ -2,14 +2,24 @@
     width: 380px;
 }
 
+.order-link {
+    width: 500px;
+}
+
 @media screen and (max-width: 600px) {
     .order-info-box {
         width: 350px;
+    }
+    .order-link {
+        width: 400px;
     }
 }
 
 @media screen and (max-width: 500px) {
     .order-info-box {
         width: 100%;
+    }
+    .order-link {
+        width: 300px;
     }
 }
