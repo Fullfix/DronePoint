@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Link, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Link, Paper, Typography, useMediaQuery } from '@material-ui/core';
 import React from 'react';
 import { CLIENT_URL } from '../../utils/api';
 
@@ -36,7 +36,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
         <React.Fragment>
             <Grid item>
                 <Paper elevation={5} placeholder="Информация о заказе">
-                    <Box width="380px" padding={'15px'}>
+                    <Box padding={'15px'} className="order-info-box">
                         <Grid container spacing={2} direction="column">
                             <Grid item>
                                 <Typography variant="h2">Информация о заказе</Typography>

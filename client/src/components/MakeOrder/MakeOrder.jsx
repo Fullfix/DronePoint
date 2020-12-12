@@ -6,6 +6,7 @@ import OrderDetails from './OrderDetails';
 import axios from 'axios';
 import { UserContext } from '../../contexts/UserContext';
 import LoadingSpinner from '../shared/LoadingSpinner';
+import './MakeOrder.css';
 
 const MakeOrder = () => {
     const [placeFrom, setPlaceFrom] = useState(null);
@@ -46,7 +47,9 @@ const MakeOrder = () => {
                 }
             }}/>
             <HeaderMenu text={"Оформить заказ"}/>
-            <Box height="90vh" padding="30px" position="relative">
+            <Box height="90vh" position="relative"
+            className="main-box"
+            width="100wv">
                 <Grid container alignItems="center" direction="column"
                 spacing={3}>
                     <Grid item>

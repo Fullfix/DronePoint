@@ -9,3 +9,19 @@ html { font-family: 'Inter', sans-serif; }
   width: 100%;
   z-index: 100;
 }
+
+.main-box {
+  padding: 30px;
+}
+
+@media screen and (max-width: 600px) {
+  .main-box {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .main-box {
+    padding: 10px;
+  }
+}

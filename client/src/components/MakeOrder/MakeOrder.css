@@ -1,0 +1,15 @@
+.order-info-box {
+    width: 380px;
+}
+
+@media screen and (max-width: 600px) {
+    .order-info-box {
+        width: 350px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .order-info-box {
+        width: 100%;
+    }
+}
