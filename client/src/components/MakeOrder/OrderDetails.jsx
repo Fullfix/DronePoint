@@ -1,5 +1,6 @@
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Link, Paper, Typography } from '@material-ui/core';
 import React from 'react';
+import { CLIENT_URL } from '../../utils/api';
 
 function calcCrow([lat1, lon1], [lat2, lon2]) {
     var R = 6371; // km
@@ -20,7 +21,7 @@ function toRad(value) {
     return value * Math.PI / 180;
 }
 
-const OrderDetails = ({ placeTo, placeFrom, onSubmit }) => {
+const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     if (!placeFrom || !placeTo) {
         return (
             <Typography variant="h3" align="center">
@@ -59,13 +60,31 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit }) => {
                 </Paper>
             </Grid>
             <Grid item>
-                <Box width="300px">
+                {!order && <Box width="300px">
                     <Button variant="contained" color="primary" fullWidth style={{
                         textTransform: 'none',
-                    }}>
+                    }} onClick={onSubmit}>
                         <Typography variant="h3">Заказать</Typography>
                     </Button>
-                </Box>
+                </Box>}
+                {order && <Box width="500px">
+                    <Typography variant="h2"align="center">Заказ оформлен</Typography>
+                    <Box border="2px solid black" padding={1} marginTop={1}>
+                        <Link href={`/order/${order._id}`} color="secondary">
+                            {`${CLIENT_URL}/order/${order._id}`}
+                        </Link>
+                    </Box>
+                    <Box marginTop={2}>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <Button href={`/order/${order._id}`} variant={'contained'}
+                                color="primary">
+                                    Перейти к отслеживанию
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>}
             </Grid>
         </React.Fragment>
     )

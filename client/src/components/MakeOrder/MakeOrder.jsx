@@ -1,8 +1,11 @@
 import { Box, Button, Grid, Input, Typography } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import DroneMap from '../shared/DroneMap';
 import HeaderMenu from '../shared/HeaderMenu';
 import OrderDetails from './OrderDetails';
+import axios from 'axios';
+import { UserContext } from '../../contexts/UserContext';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 const MakeOrder = () => {
     const [placeFrom, setPlaceFrom] = useState(null);
@@ -10,12 +13,27 @@ const MakeOrder = () => {
     const [mapOpen, setMapOpen] = useState(false);
     const [order, setOrder] = useState(null);
     const [isOrdering, setIsOrdering] = useState(false);
+    const { isAuthenticated } = useContext(UserContext);
 
     useEffect(() => {
         const makeOrder = async () => {
-            
+            try {
+                const res = await axios.post(`/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
+                    placeFrom: placeFrom._id,
+                    placeTo: placeTo._id,
+                });
+                setOrder(res.data.response);
+            } catch(err) {
+                console.log(err);
+            }
+            setIsOrdering(false);
         }
+        if (isOrdering) makeOrder();
     }, [isOrdering, placeFrom, placeTo]);
+
+    if (isOrdering) return (
+        <LoadingSpinner height="100vh"/>
+    )
 
     return (
         <React.Fragment>
@@ -35,6 +53,7 @@ const MakeOrder = () => {
                         <Box width="300px">
                             <Typography variant="h3">Маршрут</Typography>
                             <Button variant="text" fullWidth 
+                            disabled={!!order}
                             onClick={e => setMapOpen('from')}
                             style={{
                                 border: '1px solid black',
@@ -43,7 +62,8 @@ const MakeOrder = () => {
                             }}>
                                 {placeFrom?.name || 'Откуда'}
                             </Button>
-                            <Button variant="text" fullWidth 
+                            <Button variant="text" fullWidth
+                            disabled={!!order} 
                             onClick={e => setMapOpen('to')}
                             style={{
                                 border: '1px solid black',
@@ -54,7 +74,9 @@ const MakeOrder = () => {
                             </Button>
                         </Box>
                     </Grid>
-                    <OrderDetails placeFrom={placeFrom} placeTo={placeTo} onSubmit={() => {}}/>
+                    <OrderDetails placeFrom={placeFrom} placeTo={placeTo}
+                    order={order} 
+                    onSubmit={() => setIsOrdering(true)}/>
                 </Grid>
             </Box>
         </React.Fragment>

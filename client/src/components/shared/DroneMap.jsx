@@ -1,39 +1,30 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Map, Placemark } from 'react-yandex-maps';
 import { AppBar, Box, Dialog, IconButton, List, ListItem, 
     ListItemIcon, Slide, Toolbar, Typography, ListItemText, Grid, Button } from '@material-ui/core';
 import { Close as CloseIcon, LocationOn } from '@material-ui/icons';
+import axios from 'axios';
+import LoadingSpinner from './LoadingSpinner';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const dronePoints = [
-    {
-        name: 'Москва',
-        pos: [55.684758, 37.738521],
-    },
-    {
-        name: 'Ульяновск',
-        pos: [54.3187, 48.3978],
-    },
-    {
-        name: 'Димитровград',
-        pos: [54.2198, 49.6212],
-    },
-    {
-        name: 'Сочи',
-        pos: [43.6028, 39.7342],
-    },
-    {
-        name: 'Сочи 2',
-        pos: [44.6028, 39.7342],
-    }
-]
-
 const DroneMap = ({ open, onClose, onSelect }) => {
+    const [dronePoints, setDronePoints] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [selectedPoint, setSelectedPoint] = useState(null);
     const [coords, setCoords] = useState([55.75, 37.57]);
+
+    useEffect(() => {
+        const fetchDronePoints = async () => {
+            const res = await axios.get(`/dronepoint/all`);
+            setDronePoints(res.data.response);
+            setLoading(false);
+        }
+        if (loading) fetchDronePoints();
+    }, [loading])
+
     return (
         <Dialog fullScreen open={!!open} onClose={onClose}
         TransitionComponent={Transition}>
@@ -48,7 +39,8 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Grid container direction="column">
+            {loading && <LoadingSpinner height={'800px'}/>}
+            {!loading && <Grid container direction="column">
                 <Grid item>
                     <Map state={{ center: coords, zoom: 9 }}
                     className="yandex-map"
@@ -75,7 +67,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                         </ListItem>)}
                     </List>
                 </Grid>
-            </Grid>
+            </Grid>}
             <Button fullWidth variant="contained" color="primary"
             disabled={!selectedPoint}
             style={{ position: 'relative', bottom: 0 }}
