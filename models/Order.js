@@ -4,10 +4,12 @@ const orderSchema = mongoose.Schema({
     placeFrom: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'cannot be blank'],
+        ref: 'DronePoint',
     },
     placeTo: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'cannot be blank'],
+        ref: 'DronePoint',
     },
     distance: {
         type: Number,
@@ -25,6 +27,7 @@ const orderSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: false,
+        ref: 'User',
     },
 });
 

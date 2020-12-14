@@ -7,19 +7,22 @@ require('dotenv/config');
 const router = express.Router();
 
 router.get('/all', async (req, res, next) => {
-    const orders = await Order.find({});
+    const orders = await Order.find({}).populate('placeTo')
+    .populate('placeFrom').populate('user');
     res.data = orders;
     return next();
 });
 
 router.get('/me', passport.authenticate('jwt'), async (req, res, next) => {
-    const orders = await Order.find({ user: req.user._id });
+    const orders = await Order.find({ user: req.user._id }).populate('placeTo')
+    .populate('placeFrom').populate('user');
     res.data = orders;
     return next();
 });
 
 router.get('/by-id/:id', async (req, res, next) => {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate('placeTo')
+    .populate('placeFrom').populate('user');
     if (!order) {
         res.data = { err: 'Order with this id does not exist', status: 404 };
         return next();
