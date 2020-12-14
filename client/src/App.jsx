@@ -5,6 +5,11 @@ import UserProvider from './contexts/UserContext';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import MakeOrder from './components/MakeOrder';
 import OrderPage from './components/OrderPage';
+import ProtectedRoute from './routes/ProtectedRoute';
+import MyOrders from './components/MyOrders/MyOrders';
+import Login from './components/Auth/Login';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createMuiTheme({
   palette: {
@@ -14,7 +19,7 @@ const theme = createMuiTheme({
     },
     text: {
       primary: '#000000',
-      secondary: '#33AFFF',
+      secondary: '#4a4f52',
     }
   },
   typography: {
@@ -39,6 +44,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <UserProvider>
         <YMaps>
+          <ToastContainer />
           <Box bgcolor="#E5E5E5">
             <Container maxWidth="sm">
               <Box bgcolor="white" minHeight="100vh">
@@ -49,6 +55,8 @@ function App() {
                     </Route>
                     <Route exact path="/makeorder" component={MakeOrder} />
                     <Route exact path="/order/:id" component={OrderPage} />
+                    <Route exact path="/login" component={Login}/>
+                    <ProtectedRoute exact path="/myorders" component={MyOrders} />
                   </Switch>
                 </Router>
               </Box>

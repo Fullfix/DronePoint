@@ -6,6 +6,7 @@ export const UserContext = createContext({
     isAuthenticated: false,
     isLoading: true,
     logout: () => {},
+    login: async ({ username, password }) => {},
 })
 
 const UserProvider = ({ children }) => {
@@ -19,6 +20,20 @@ const UserProvider = ({ children }) => {
         setUser(null);
     }
 
+    const login = async ({ username, password }) => {
+        try {
+            const res = await axios.post('/auth/login', {
+                username,
+                password,
+            });
+            localStorage.setItem('token', res.data.response.token);
+            setUser(res.data.response.user);
+            return true;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -38,6 +53,7 @@ const UserProvider = ({ children }) => {
             isAuthenticated: !!user,
             isLoading: loading,
             logout: logout,
+            login: login,
         }}>
             {children}
         </UserContext.Provider>
