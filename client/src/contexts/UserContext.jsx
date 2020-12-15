@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const UserContext = createContext({
     user: null,
@@ -7,6 +8,7 @@ export const UserContext = createContext({
     isLoading: true,
     logout: () => {},
     login: async ({ username, password }) => {},
+    register: async ({ username, password }) => {},
 })
 
 const UserProvider = ({ children }) => {
@@ -34,6 +36,27 @@ const UserProvider = ({ children }) => {
             return false;
         }
     }
+
+    const register = async ({ username, password }) => {
+        try {
+            const resRegister = await axios.post('/api/auth/signup', {
+                username,
+                password
+            });
+            toast.success('Аккаунт зарегестрирован');
+            const res = await axios.post('/api/auth/login', {
+                username,
+                password,
+            });
+            localStorage.setItem('token', res.data.response.token);
+            setUser(res.data.response.user);
+            return true;
+        } catch (err) {
+            console.log(err);
+            toast.error(err.response.data.error.reason);
+            return false;
+        }
+    }
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -54,6 +77,7 @@ const UserProvider = ({ children }) => {
             isLoading: loading,
             logout: logout,
             login: login,
+            register: register,
         }}>
             {children}
         </UserContext.Provider>

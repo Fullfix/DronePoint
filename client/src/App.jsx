@@ -11,6 +11,7 @@ import Login from './components/Auth/Login';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BottomMenu from './components/shared/BottomMenu';
+import Register from './components/Auth/Register';
 
 const theme = createMuiTheme({
   palette: {
@@ -57,6 +58,7 @@ function App() {
                     <Route exact path="/makeorder" component={MakeOrder} />
                     <Route exact path="/order/:id" component={OrderPage} />
                     <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Register} />
                     <ProtectedRoute exact path="/myorders" component={MyOrders} />
                   </Switch>
                   <BottomMenu />

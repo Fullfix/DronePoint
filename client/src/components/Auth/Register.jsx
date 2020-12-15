@@ -4,9 +4,8 @@ import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../contexts/UserContext'
 import HeaderMenu from '../shared/HeaderMenu'
-import LoadingSpinner from '../shared/LoadingSpinner'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         marginTop: '20px',
         width: '100%',
@@ -16,33 +15,35 @@ const useStyles = makeStyles({
         color: "gray"
       },
     }
-})
+}))
 
-const Login = () => {
-    const { login } = useContext(UserContext);
+const Register = () => {
+    const { register } = useContext(UserContext);
     const history = useHistory();
     const classes = useStyles();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         const submit = async () => {
-            const success = await login({ username, password });
+            if (password !== password2) {
+                toast.warn('Пароли не совпадают');
+                return setSubmitting(false);
+            }
+            const success = await register({ username, password });
             if (success) {
                 return history.push('/');
             }
             setSubmitting(false);
-            toast.error('Неверный логин или пароль');
         }
         if (submitting) submit();
     }, [submitting]);
-    if (submitting) return (
-        <LoadingSpinner />
-    )
+
     return (
         <React.Fragment>
-            <HeaderMenu text={'Авторизация'}/>
+            <HeaderMenu text={'Регистрация'}/>
             <Grid container spacing={2} direction="column"
             className={classes.container}>
                 <Grid item container justify="center">
@@ -59,24 +60,24 @@ const Login = () => {
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={10}>
-                        <Button variant="contained" color="primary" fullWidth
-                        onClick={e => setSubmitting(true)}>
-                            Войти
-                        </Button>
+                        <TextField label="Подтверждение пароля" variant="outlined" type="password" 
+                        size="small" fullWidth value={password2} 
+                        onChange={e => setPassword2(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={10}>
-                        <Button variant="text" color="default" fullWidth size="small">
-                            Забыли пароль
+                        <Button variant="contained" color="primary" fullWidth
+                        onClick={e => setSubmitting(true)}>
+                            Зарегестрироваться
                         </Button>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={10}>
                         <Button variant="text" color="default" fullWidth size="small"
-                        href="/register">
-                            Зарегестрироваться
+                        href="/login">
+                            Логин
                         </Button>
                     </Grid>
                 </Grid>
@@ -85,4 +86,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register
