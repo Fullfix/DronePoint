@@ -47,7 +47,7 @@ const MakeOrder = () => {
                 }
             }}/>
             <HeaderMenu text={"Оформить заказ"}/>
-            <Box height="90vh" position="relative"
+            <Box position="relative"
             className="main-box"
             width="100wv">
                 <Grid container alignItems="center" direction="column"

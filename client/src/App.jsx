@@ -10,6 +10,7 @@ import MyOrders from './components/MyOrders/MyOrders';
 import Login from './components/Auth/Login';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BottomMenu from './components/shared/BottomMenu';
 
 const theme = createMuiTheme({
   palette: {
@@ -47,7 +48,7 @@ function App() {
           <ToastContainer />
           <Box bgcolor="#E5E5E5">
             <Container maxWidth="sm">
-              <Box bgcolor="white" minHeight="100vh">
+              <Box bgcolor="white" minHeight="100vh" position="relative">
                 <Router>
                   <Switch>
                     <Route exact path="/">
@@ -58,6 +59,7 @@ function App() {
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/myorders" component={MyOrders} />
                   </Switch>
+                  <BottomMenu />
                 </Router>
               </Box>
             </Container>
