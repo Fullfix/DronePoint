@@ -18,7 +18,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
 
     useEffect(() => {
         const fetchDronePoints = async () => {
-            const res = await axios.get(`/dronepoint/all`);
+            const res = await axios.get(`/api/dronepoint/all`);
             setDronePoints(res.data.response);
             setLoading(false);
         }

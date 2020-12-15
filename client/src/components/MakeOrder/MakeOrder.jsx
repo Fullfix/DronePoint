@@ -19,7 +19,7 @@ const MakeOrder = () => {
     useEffect(() => {
         const makeOrder = async () => {
             try {
-                const res = await axios.post(`/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
+                const res = await axios.post(`/api/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
                     placeFrom: placeFrom._id,
                     placeTo: placeTo._id,
                 });

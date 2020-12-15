@@ -22,7 +22,7 @@ const UserProvider = ({ children }) => {
 
     const login = async ({ username, password }) => {
         try {
-            const res = await axios.post('/auth/login', {
+            const res = await axios.post('/api/auth/login', {
                 username,
                 password,
             });
@@ -37,7 +37,7 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get('/auth/me');
+                const res = await axios.get('/api/auth/me');
                 setUser(res.data.response.user);
             } catch (err) {
                 console.log(err);

@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const auth = require('./routes/auth');
 const order = require('./routes/order');
@@ -19,8 +20,6 @@ require('dotenv/config');
 const app = express();
 const port = process.env.PORT || 2000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
-
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -31,12 +30,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-app.use('/auth', auth);
-app.use('/order', order);
-app.use('/dronepoint', dronepoint);
+app.use('/api/auth', auth);
+app.use('/api/order', order);
+app.use('/api/dronepoint', dronepoint);
 
 // handling response
-app.use((req, res) => {
+app.use('/api/*', (req, res) => {
     console.log('end');
     console.log(res.data);
     if (!res.data) {
@@ -61,6 +60,12 @@ app.use((req, res) => {
         ok: true,
         response: res.data
     })
+});
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('*', (req, res) => { 
+    return res.sendFile(path.join(__dirname, 'client/build/index.html'));  
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

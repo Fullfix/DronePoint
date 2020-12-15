@@ -5,7 +5,7 @@ export const CLIENT_URL = 'http://localhost:3000';
 
 export const fetchMyOrders = async () => {
     try {
-        const res = await axios.get('/order/me');
+        const res = await axios.get('/api/order/me');
         return res.data.response;
     } catch (err) {
         console.log(err);
