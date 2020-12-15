@@ -74,7 +74,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                             <Box border="2px solid black" padding={1} marginTop={1}>
                                 <Link href={`/order/${order._id}`} color="secondary">
                                     <Typography style={{ wordWrap: 'break-word' }}>
-                                        {`${CLIENT_URL}/order/${order._id}`}
+                                        {`${window.location.hostname}/order/${order._id}`}
                                     </Typography>
                                 </Link>
                             </Box>

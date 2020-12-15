@@ -35,7 +35,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h2">
-                        Выберите Дрон-пойнт ({ open === 'from' ? 'откуда' : 'куда'})
+                        Выберите Дрон поинт ({ open === 'from' ? 'откуда' : 'куда'})
                     </Typography>
                 </Toolbar>
             </AppBar>

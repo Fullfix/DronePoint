@@ -69,7 +69,7 @@ const Register = () => {
                     <Grid item xs={10}>
                         <Button variant="contained" color="primary" fullWidth
                         onClick={e => setSubmitting(true)}>
-                            Зарегестрироваться
+                            Зарегистрироваться
                         </Button>
                     </Grid>
                 </Grid>

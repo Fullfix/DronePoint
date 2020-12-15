@@ -76,7 +76,7 @@ const Login = () => {
                     <Grid item xs={10}>
                         <Button variant="text" color="default" fullWidth size="small"
                         href="/register">
-                            Зарегестрироваться
+                            Зарегистрироваться
                         </Button>
                     </Grid>
                 </Grid>
