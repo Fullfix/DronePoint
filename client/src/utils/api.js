@@ -11,3 +11,12 @@ export const fetchMyOrders = async () => {
         console.log(err);
     }
 }
+
+export const fetchOrder = async (id) => {
+    try {
+        const res = await axios.get(`/api/order/by-id/${id}`);
+        return res.data.response;
+    } catch (err) {
+        console.log(err);
+    }
+}
