@@ -1,12 +1,16 @@
-import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { fetchOrder } from '../../utils/api';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
+import DroneLocation from './DroneLocation';
 
 const useStyles = makeStyles(theme => ({
     root: {},
+    location: {
+        marginTop: '20px',
+    }
 }))
 
 const statusToText = {
@@ -41,31 +45,33 @@ const OrderPage = () => {
     return (
         <React.Fragment>
             <HeaderMenu text={'Заказ'}/>
-            <Paper elevation={5} placeholder="Информация о заказе" className={classes.root}>
-                <Box padding={'15px'} className="order-info-box">
-                    <Grid container spacing={2} direction="column">
-                        <Grid item>
-                            <Typography variant="h2">Информация о заказе</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h3">
-                                {order.placeFrom.name} {'==>'} {order.placeTo.name}
-                            </Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h3">Расстояние: {order.distance}km</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h3">Цена: {order.price}руб</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h3">
-                                Статус доставки: {statusToText[order.state]}
-                            </Typography>
-                        </Grid>
+            <Box padding={'15px'} className="order-info-box">
+                <Grid container spacing={2} direction="column">
+                    <Grid item>
+                        <Typography variant="h2">Информация о заказе</Typography>
                     </Grid>
-                </Box>
-            </Paper>
+                    <Grid item>
+                        <Typography variant="h3">
+                            {order.placeFrom.name} {'==>'} {order.placeTo.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h3">Расстояние: {order.distance}km</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h3">Цена: {order.price}руб</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h3">
+                            Статус доставки: {statusToText[order.state]}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Box>
+            <DroneLocation pos={order.drone.pos}/>
+            <Button variant="contained" color="primary" fullWidth>
+                Доставить
+            </Button>
         </React.Fragment>
     )
 }
