@@ -25,7 +25,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     if (!placeFrom || !placeTo) {
         return (
             <Typography variant="h3" align="center">
-                Выберите место отправления и досавки, чтобы оформить заказ
+                Выберите место отправления и доставки, чтобы оформить заказ
             </Typography>
         )
     }
