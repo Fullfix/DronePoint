@@ -1,7 +1,7 @@
 import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import { fetchOrder } from '../../utils/api';
+import { fetchOrder, droneAction } from '../../utils/api';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import DroneLocation from './DroneLocation';
@@ -69,7 +69,8 @@ const OrderPage = () => {
                 </Grid>
             </Box>
             <DroneLocation pos={order.drone.pos}/>
-            <Button variant="contained" color="primary" fullWidth>
+            <Button variant="contained" color="primary" fullWidth
+            onClick={() => droneAction()}>
                 Доставить
             </Button>
         </React.Fragment>

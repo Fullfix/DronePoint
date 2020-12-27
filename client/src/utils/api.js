@@ -20,3 +20,12 @@ export const fetchOrder = async (id) => {
         console.log(err);
     }
 }
+
+export const droneAction = async () => {
+    try {
+        const res = await axios.post('/api/order/action');
+        return res.data.response;
+    } catch (err) {
+        console.log(err);
+    }
+}
