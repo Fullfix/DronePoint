@@ -29,6 +29,11 @@ const orderSchema = mongoose.Schema({
         required: false,
         ref: 'User',
     },
+    drone: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Drone',
+    },
 });
 
 module.exports = mongoose.model('Order', orderSchema);
