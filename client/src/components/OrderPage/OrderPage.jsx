@@ -70,7 +70,7 @@ const OrderPage = () => {
             </Box>
             <DroneLocation pos={order.drone.pos}/>
             <Button variant="contained" color="primary" fullWidth
-            onClick={() => droneAction()}>
+            onClick={() => droneAction(order.drone._id)}>
                 Доставить
             </Button>
         </React.Fragment>

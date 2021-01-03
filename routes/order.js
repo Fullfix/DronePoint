@@ -81,8 +81,15 @@ router.post('/create/guest', async (req, res, next) => {
     return next();
 });
 
-// router.post('/action', async (req, res, next) => {
-
-// })
+router.post('/action', async (req, res, next) => {
+    const drone = await Drone.findById(req.body.id);
+    if (!drone) {
+        res.data = { err: "Drone with this id doesn't exist" }
+        return next();
+    }
+    const newDrone = await Drone.updateOne({ _id: req.body.id }, { '$set': { action: 'takeoff' }});
+    res.data = newDrone || 'ok';
+    return next();
+})
 
 module.exports = router;
