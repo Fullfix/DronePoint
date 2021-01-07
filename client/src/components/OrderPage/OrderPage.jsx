@@ -56,10 +56,10 @@ const OrderPage = () => {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant="h3">Расстояние: {order.distance}km</Typography>
+                        <Typography variant="h3">Расстояние: {order.distance} км</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant="h3">Цена: {order.price}руб</Typography>
+                        <Typography variant="h3">Цена: {order.price} ₽</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="h3">

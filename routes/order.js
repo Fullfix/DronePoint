@@ -55,8 +55,8 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
     const order = new Order({
         placeFrom: placeFrom._id,
         placeTo: placeTo._id,
-        distance: req.body.price,
-        price: req.body.distance,
+        distance: req.body.distance,
+        price: req.body.price,
         user: req.user._id,
         drone: drone._id,
     });
@@ -76,12 +76,20 @@ router.post('/create/guest', async (req, res, next) => {
         res.data = { err: "Invalid placeTo: Drone point doesn't exist" };
         return next();
     }
+    if (!req.body.price) {
+        res.data = { err: "Invalid price" };
+        return next();
+    }
+    if (!req.body.distance) {
+        res.data = { err: "Invalid distance" };
+        return next();
+    }
     const drone = await Drone.findOne();
     const order = new Order({
         placeFrom: placeFrom._id,
         placeTo: placeTo._id,
-        distance: 100,
-        price: 100,
+        distance: req.body.distance,
+        price: req.body.price,
         drone: drone._id,
     });
     const newOrder = await order.save();
