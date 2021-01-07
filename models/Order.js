@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = mongoose.Schema({
+const orderSchema = new mongoose.Schema({
     placeFrom: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'cannot be blank'],
@@ -34,6 +34,6 @@ const orderSchema = mongoose.Schema({
         required: true,
         ref: 'Drone',
     },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

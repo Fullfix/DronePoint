@@ -1,6 +1,7 @@
-import { Box, Button, Container, Grid, Link, Paper, Typography, useMediaQuery } from '@material-ui/core';
-import React from 'react';
-import { CLIENT_URL } from '../../utils/api';
+import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, Typography, useMediaQuery } from '@material-ui/core';
+import { Info } from '@material-ui/icons';
+import React, { useState } from 'react';
+import { formattedTime } from '../../utils/display';
 
 function calcCrow([lat1, lon1], [lat2, lon2]) {
     var R = 6371; // km
@@ -21,7 +22,26 @@ function toRad(value) {
     return value * Math.PI / 180;
 }
 
+const useStyles = makeStyles(theme => ({
+    info: {
+        width: 330,
+    },
+    tarif: {
+        marginTop: 20,
+    },
+    radio: {
+        marginTop: -4,
+    },
+    tarifLabel: {
+        marginBottom: 15,
+    }
+}))
+
+
 const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
+    const classes = useStyles();
+    const [tariff, setTariff] = useState(100);
+
     if (!placeFrom || !placeTo) {
         return (
             <Typography variant="h3" align="center">
@@ -29,41 +49,81 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
             </Typography>
         )
     }
+
     const distance = calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
-    const time = 100;
-    const price = 100;
+    const droneVelocity = 5;
+    console.log(tariff);
+    const info = [
+        {
+            label: 'Старт',
+            value: placeFrom.name,
+        },
+        {
+            label: 'Финиш',
+            value: placeTo.name,
+        },
+        {
+            label: 'Расстояние',
+            value: `${parseInt(distance)} км`,
+        },
+        {
+            label: 'Время доставки',
+            value: formattedTime(distance * 1000 / droneVelocity),
+        },
+    ]
+    const tariffes = [
+        { label: 'Обычный', value: 100 },
+        { label: 'Быстрый', value: 150 },
+        { label: 'По подписке', value: 69 },
+    ]
+
     return (
         <React.Fragment>
-            <Grid item>
-                <Paper elevation={5} placeholder="Информация о заказе">
-                    <Box padding={'15px'} className="order-info-box">
-                        <Grid container spacing={2} direction="column">
+            <Grid item container spacing={2} direction="column" className={classes.info}>
+                {info.map(inf => 
+                <Grid item container justify="space-between"
+                alignItems="flex-end">
+                    <Grid item>
+                        <Typography variant="h3">{inf.label} </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h4">{inf.value}</Typography>
+                    </Grid>
+                </Grid>)}
+                <Grid item className={classes.tarif}>
+                    <Typography variant="h3" 
+                    className={classes.tarifLabel}>Выбор тарифа</Typography>
+                    <Grid container spacing={1} direction="column">
+                        {tariffes.map(tarif => 
+                        <Grid item container justify="space-between" alignItems="center">
                             <Grid item>
-                                <Typography variant="h2">Информация о заказе</Typography>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="h3">
-                                    {placeFrom.name} {'==>'} {placeTo.name}
+                                <Typography variant="h4" component="span">
+                                    <Radio color="primary" className={classes.radio}
+                                    checked={tariff === tarif.value}
+                                    onChange={() => setTariff(tarif.value)}/>
+                                    {tarif.label} ({tarif.value} ₽/км)
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="h3">Расстояние: {distance}km</Typography>
+                                <Info />
                             </Grid>
-                            <Grid item>
-                                <Typography variant="h3">Время: {time}мин</Typography>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="h3">Цена: {price}руб</Typography>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Paper>
+                        </Grid>)}
+                    </Grid>
+                </Grid>
+                <Grid item container justify="space-between">
+                    <Grid item>
+                        <Typography variant="h2">Сумма доставки</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h2">{parseInt(distance * tariff)} ₽</Typography>
+                    </Grid>
+                </Grid>
             </Grid>
             <Grid item>
                 {!order && <Box width="300px">
                     <Button variant="contained" color="primary" fullWidth style={{
                         textTransform: 'none',
-                    }} onClick={onSubmit}>
+                    }} onClick={() => onSubmit(distance, parseInt(distance * tariff))}>
                         <Typography variant="h3">Заказать</Typography>
                     </Button>
                 </Box>}

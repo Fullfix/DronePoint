@@ -15,6 +15,8 @@ const MakeOrder = () => {
     const [order, setOrder] = useState(null);
     const [isOrdering, setIsOrdering] = useState(false);
     const { isAuthenticated } = useContext(UserContext);
+    const [distance, setDistance] = useState(null);
+    const [price, setPrice] = useState(null);
 
     useEffect(() => {
         const makeOrder = async () => {
@@ -22,15 +24,19 @@ const MakeOrder = () => {
                 const res = await axios.post(`/api/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
                     placeFrom: placeFrom._id,
                     placeTo: placeTo._id,
+                    distance,
+                    price,
                 });
                 setOrder(res.data.response);
             } catch(err) {
                 console.log(err);
             }
             setIsOrdering(false);
+            setPrice(null);
+            setDistance(null);
         }
         if (isOrdering) makeOrder();
-    }, [isOrdering, placeFrom, placeTo]);
+    }, [isOrdering, placeFrom, placeTo, distance, price]);
 
     if (isOrdering) return (
         <LoadingSpinner height="100vh"/>
@@ -79,7 +85,11 @@ const MakeOrder = () => {
                     </Grid>
                     <OrderDetails placeFrom={placeFrom} placeTo={placeTo}
                     order={order} 
-                    onSubmit={() => setIsOrdering(true)}/>
+                    onSubmit={(d, pr) => {
+                        setDistance(d);
+                        setPrice(pr);
+                        setIsOrdering(true);
+                    }}/>
                 </Grid>
             </Box>
         </React.Fragment>
