@@ -8,12 +8,13 @@ import time
 import threading
 
 from pymongo import MongoClient
-from pymavlink import mavutil
+from pymavlink import mavutil, mavwp
 from pymavlink.mavutil import mavlink
 import math
 
 
 logging.basicConfig(level=logging.INFO)
+wp = mavwp.MAVWPLoader()
 
 
 class MavlinkListener():
@@ -87,6 +88,102 @@ class MavlinkListener():
             -1, 0, 0, math.nan, math.nan, math.nan, 500,
         )
         print('Takeoff Action Completed')
+    
+    def SET_HOME(self, homelocation, altitude):
+        print('Setting Home')
+        self.mavconn.mav.command_long_send(
+            self.mavconn.target_system, self.mavconn.target_component,
+            mavutil.mavlink.MAV_CMD_DO_SET_HOME,
+            1, # set position
+            0, # param1
+            0, # param2
+            0, # param3
+            0, # param4
+            homelocation[0], # lat
+            homelocation[1], # lon
+            altitude)
+    
+    def MISSION_ACTION_HANDLER(self):
+        print('Initing Mission')
+
+        # Takeoff
+        frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            0,
+            frame,
+            mavlink.MAV_CMD_NAV_TAKEOFF,
+            0,
+            1,
+            15, 0, 0, 0,
+            47.397742,
+            8.5455939,
+            20,
+        )
+        wp.add(p)
+        print('Created Waypoints')
+
+        # Waypoint
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            1,
+            frame,
+            mavlink.MAV_CMD_NAV_WAYPOINT,
+            0,
+            1,
+            0, 10, 0, 0,
+            47.398742,
+            8.5455939,
+            20,
+        )
+        wp.add(p)
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            2,
+            frame,
+            mavlink.MAV_CMD_NAV_LAND,
+            0,
+            1,
+            0, 0, 0, 0,
+            47.398742,
+            8.5455939,
+            0,
+        )
+        wp.add(p)
+
+
+        # Message
+        self.SET_HOME([47.397742, 8.5455939], 489)
+        msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
+        print('Received message')
+        print(msg)
+
+        # send waypoints
+        self.mavconn.waypoint_clear_all_send()
+        self.mavconn.waypoint_count_send(wp.count())
+
+        for i in range(wp.count()):
+            msg = self.mavconn.recv_match(type=['MISSION_REQUEST'], blocking=True)
+            print(msg)
+            self.mavconn.mav.send(wp.wp(msg.seq))
+            print(f'Sending waypoint {msg.seq}')
+        msg = self.mavconn.recv_match(type=['MISSION_ACK'], blocking=True)
+        print('Received mission')
+        print(msg)
+        # self.mavconn.mav.command_long_send(
+        #     self.mavconn.target_system,
+        #     self.mavconn.target_component,
+        #     mavlink.MAV_CMD_MISSION_START,
+        #     1,
+        #     0, 0, 0, 0, 0, 0, 0,
+        # )
+        time.sleep(1)
+        self.mavconn.set_mode_auto()
+        print('Started Mission')
+
 
     def handle_message(self, msg):
         # Prepare msg_dict
@@ -134,6 +231,7 @@ class MavlinkListener():
         thread_act = threading.Thread(target=self.receive_actions)
         thread_msg.start()
         thread_act.start()
+        self.MISSION_ACTION_HANDLER()
 
 listener = MavlinkListener()
 listener.listen()
