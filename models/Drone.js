@@ -18,8 +18,12 @@ const droneSchema = mongoose.Schema({
     },
     action: {
         type: String,
-        enum: ['', 'takeoff'],
-    }
+        enum: ['', 'order'],
+    },
+    order: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'orders',
+    },
 });
 
 module.exports = mongoose.model('Drone', droneSchema);

@@ -9,8 +9,17 @@ class MongoConnection:
         client = MongoClient(self.mongo_url)
         self.db = client[self.mongo_db]
     
+    def get_latest_order(self):
+        order = self.db.orders.find_one({ "state": "not-started" })
+        place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
+        place_to = self.db.dronepoints.find_one({ "_id": order["placeTo"] })
+        return place_from, place_to, order["_id"],
+    
     def update_drone(self, sysid, data):
         self.db.drones.update_one({ "sysid": sysid }, { "$set": data })
+    
+    def update_order(self, _id, state):
+        self.db.orders.update_one({ "_id": _id }, { "$set": { "state": state }})
     
     def receive_actions(self):
         while True:
@@ -22,6 +31,7 @@ class MongoConnection:
                     print('Detected Action Update')
                     # Handle actions
                     self.handle_action(info['action'])
+                    print(info)
                     self.db.drones.update_one({ "sysid": self.mavconn.target_system }, { "$set": {
                         "action": "",
                     }})

@@ -40,6 +40,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
             self.latest_pos = pos[:]
             self.latest_alt = alt
     
+    def HEARTBEAT_HANDLER(self, msg_dict):
+        self.armed =  msg_dict["system_status"] == 4
+    
     def EXTENDED_SYS_STATE_HANDLER(self, msg_dict):
         # Get landed state
         landed_state = msg_dict['landed_state']
@@ -70,22 +73,56 @@ class DroneHandler(MongoConnection, MavlinkListener):
         )
         print('Takeoff Action Completed')
 
+    def deliver_order(self):
+        place_from, place_to, order = self.get_latest_order()
+        print(f'Starting Order from {place_from["pos"]} to {place_to["pos"]}')
+        self.delivering = True
+        self.update_order(order, "in-progress")
+        self.mission_goto(place_from["pos"])
+        time.sleep(5)
+        while True:
+            print(f'Check Armed: {self.armed}')
+            if not self.armed:
+                break
+            time.sleep(5)
+        self.mission_goto(place_to["pos"])
+        print("First Point Reached")
+        time.sleep(10)
+        while True:
+            print(f'Check Armed: {self.armed}')
+            if not self.armed:
+                break
+            time.sleep(5)
+        print('Completed Order')
+        self.delivering = False
+        self.update_order(order, "completed")
+
+
     def handle_message(self, msg_dict):
         if msg_dict['msgid'] == mavlink.MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
             self.GLOBAL_POSITION_INT_HANDLER(msg_dict)
         elif msg_dict['msgid'] == mavlink.MAVLINK_MSG_ID_EXTENDED_SYS_STATE:
             self.EXTENDED_SYS_STATE_HANDLER(msg_dict)
+        elif msg_dict['msgid'] == mavlink.MAVLINK_MSG_ID_HEARTBEAT:
+            self.HEARTBEAT_HANDLER(msg_dict)
+
     
     def handle_action(self, action):
-        if action == 'takeoff':
-            self.TAKEOFF_ACTION_HANDLER()
+        if action == 'order':
+            print('ORDER')
     
     def listen(self):
         thread_msg = threading.Thread(target=self.receive_messages)
         thread_act = threading.Thread(target=self.receive_actions)
         thread_msg.start()
         thread_act.start()
-        # self.MISSION_ACTION_HANDLER()
+
+        time.sleep(3)
+        self.deliver_order()
+
+        # time.sleep(3)
+        # self.mission_goto([self.latest_pos[0] + .001, self.latest_pos[1]])
+        # self.mission_goto([54.3187, 48.3978])
 
 listener = DroneHandler()
 listener.listen()

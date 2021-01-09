@@ -30,6 +30,9 @@ class MavlinkListener:
         self.latest_pos = [-1, -1]
         self.latest_landing = -1
         self.latest_alt = -1
+        self.current_dronepoint = None
+        self.armed = False
+        self.delivering = False
     
     def set_home(self, homelocation, altitude):
         print('Setting Home')
@@ -47,6 +50,7 @@ class MavlinkListener:
     
     def mission_goto(self, destination):
         print('Initiating Mission')
+        wp.clear()
         # Takeoff
         frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
         p = mavlink.MAVLink_mission_item_message(
@@ -58,8 +62,8 @@ class MavlinkListener:
             0,
             1,
             15, 0, 0, 0,
-            47.397742,
-            8.5455939,
+            self.latest_pos[0],
+            self.latest_pos[1],
             20,
         )
         wp.add(p)
@@ -73,8 +77,8 @@ class MavlinkListener:
             0,
             1,
             0, 10, 0, 0,
-            47.398742,
-            8.5455939,
+            destination[0],
+            destination[1],
             20,
         )
         wp.add(p)
@@ -88,17 +92,18 @@ class MavlinkListener:
             0,
             1,
             0, 0, 0, 0,
-            47.398742,
-            8.5455939,
+            destination[0],
+            destination[1],
             0,
         )
         wp.add(p)
 
         # Message
-        self.set_home([47.397742, 8.5455939], 489)
-        msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
-        print('Received message')
-        print(msg)
+        # self.set_home(self.latest_pos, self.latest_alt)
+        self.set_home(destination, self.latest_alt)
+        # msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
+        # print('Received message')
+        # print(msg)
 
         # Send waypoints
         self.mavconn.waypoint_clear_all_send()
@@ -109,9 +114,9 @@ class MavlinkListener:
             print(msg)
             self.mavconn.mav.send(wp.wp(msg.seq))
             print(f'Sending waypoint {msg.seq}')
-        msg = self.mavconn.recv_match(type=['MISSION_ACK'], blocking=True)
-        print('Received mission')
-        print(msg)
+        # msg = self.mavconn.recv_match(type=['MISSION_ACK'])
+        # print('Received mission')
+        # print(msg)
 
         # Start Mission
         time.sleep(1)
