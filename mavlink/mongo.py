@@ -9,8 +9,8 @@ class MongoConnection:
         client = MongoClient(self.mongo_url)
         self.db = client[self.mongo_db]
     
-    def get_latest_order(self):
-        order = self.db.orders.find_one({ "state": "not-started" })
+    def get_order(self, _id):
+        order = self.db.orders.find_one({ "state": "not-started", "_id": _id })
         place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
         place_to = self.db.dronepoints.find_one({ "_id": order["placeTo"] })
         return place_from, place_to, order["_id"],
@@ -30,10 +30,10 @@ class MongoConnection:
                 if 'action' in info.keys():
                     print('Detected Action Update')
                     # Handle actions
-                    self.handle_action(info['action'])
-                    print(info)
+                    self.handle_action(info['action'], info)
                     self.db.drones.update_one({ "sysid": self.mavconn.target_system }, { "$set": {
                         "action": "",
+                        "order": None,
                     }})
     
     def handle_action(self, action):

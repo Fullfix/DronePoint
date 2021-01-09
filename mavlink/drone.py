@@ -73,8 +73,8 @@ class DroneHandler(MongoConnection, MavlinkListener):
         )
         print('Takeoff Action Completed')
 
-    def deliver_order(self):
-        place_from, place_to, order = self.get_latest_order()
+    def deliver_order(self, _id):
+        place_from, place_to, order = self.get_order(_id)
         print(f'Starting Order from {place_from["pos"]} to {place_to["pos"]}')
         self.delivering = True
         self.update_order(order, "in-progress")
@@ -107,22 +107,16 @@ class DroneHandler(MongoConnection, MavlinkListener):
             self.HEARTBEAT_HANDLER(msg_dict)
 
     
-    def handle_action(self, action):
+    def handle_action(self, action, info):
         if action == 'order':
-            print('ORDER')
+            print('Order Action Received')
+            self.deliver_order(info["order"])
     
     def listen(self):
         thread_msg = threading.Thread(target=self.receive_messages)
         thread_act = threading.Thread(target=self.receive_actions)
         thread_msg.start()
         thread_act.start()
-
-        time.sleep(3)
-        self.deliver_order()
-
-        # time.sleep(3)
-        # self.mission_goto([self.latest_pos[0] + .001, self.latest_pos[1]])
-        # self.mission_goto([54.3187, 48.3978])
 
 listener = DroneHandler()
 listener.listen()

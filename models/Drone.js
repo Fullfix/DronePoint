@@ -23,6 +23,7 @@ const droneSchema = mongoose.Schema({
     order: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'orders',
+        required: false,
     },
 });
 

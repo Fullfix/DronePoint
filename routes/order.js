@@ -103,7 +103,15 @@ router.post('/action', async (req, res, next) => {
         res.data = { err: "Drone with this id doesn't exist" }
         return next();
     }
-    const newDrone = await Drone.updateOne({ _id: req.body.id }, { '$set': { action: 'takeoff' }});
+    const order = await Order.findById(req.body.orderId);
+    if (!order) {
+        res.data = { err: "Order with this id doesn't exist" }
+        return next()
+    }
+    const newDrone = await Drone.updateOne({ _id: req.body.id }, { '$set': { 
+        action: 'order',
+        order: order._id,
+    }});
     res.data = newDrone || 'ok';
     return next();
 })
