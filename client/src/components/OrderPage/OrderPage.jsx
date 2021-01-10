@@ -2,6 +2,7 @@ import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/c
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { fetchOrder, droneAction } from '../../utils/api';
+import { statusToText, tariffToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import DroneLocation from './DroneLocation';
@@ -10,14 +11,15 @@ const useStyles = makeStyles(theme => ({
     root: {},
     location: {
         marginTop: '20px',
-    }
+    },
+    info: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
+    total: {
+        marginTop: theme.spacing(2),
+    },
 }))
-
-const statusToText = {
-    "not-started": "Ещё не началась",
-    "in-progress": "В процессе",
-    "completed": "Доставлена",
-}
 
 const OrderPage = () => {
     const { id } = useParams();
@@ -42,37 +44,64 @@ const OrderPage = () => {
     if (!order) return (
         <Redirect to="/" />
     )
+
+    const info = [
+        {
+            label: 'Старт',
+            value: order.placeFrom.name,
+        },
+        {
+            label: 'Финиш',
+            value: order.placeTo.name,
+        },
+        {
+            label: 'Расстояние',
+            value: `${parseInt(order.distance)} км`,
+        },
+        {
+            label: `Тариф "${tariffToText[order.tariff.toString()]}"`,
+            value: `${order.tariff} ₽/км`,
+        },
+        {
+            label: `Статус доставки`,
+            value: `${statusToText[order.state].text}`,
+            color: `${statusToText[order.state].color}`,
+        }
+    ]
+
+
     return (
         <React.Fragment>
             <HeaderMenu text={'Заказ'}/>
-            <Box padding={'15px'} className="order-info-box">
-                <Grid container spacing={2} direction="column">
+            <DroneLocation pos={order.drone.pos}/>
+            <Grid container spacing={2} direction="column" alignItems="center"
+            className={classes.info}>
+                {info.map(inf => 
+                    <Grid item container justify="space-between"
+                    alignItems="flex-end" xs={10}>
+                        <Grid item>
+                            <Typography variant="h3">{inf.label} </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h4"
+                            style={{ color: inf.color, fontWeight: inf.color && 'bold' }}>
+                                {inf.value}
+                            </Typography>
+                        </Grid>
+                    </Grid>)}
+                <Grid item container justify="space-between" xs={10} className={classes.total}>
                     <Grid item>
-                        <Typography variant="h2">Информация о заказе</Typography>
+                        <Typography variant="h2">Сумма доставки</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant="h3">
-                            {order.placeFrom.name} {'==>'} {order.placeTo.name}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h3">Расстояние: {order.distance} км</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h3">Цена: {order.price} ₽</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h3">
-                            Статус доставки: {statusToText[order.state]}
-                        </Typography>
+                        <Typography variant="h2">{order.price} ₽</Typography>
                     </Grid>
                 </Grid>
-            </Box>
-            <DroneLocation pos={order.drone.pos}/>
-            <Button variant="contained" color="primary" fullWidth
+            </Grid>
+            {order.state === 'not-started' && <Button variant="contained" color="primary" fullWidth
             onClick={() => droneAction(order.drone._id, order._id)}>
                 Доставить
-            </Button>
+            </Button>}
         </React.Fragment>
     )
 }

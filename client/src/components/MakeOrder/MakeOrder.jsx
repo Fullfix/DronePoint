@@ -17,6 +17,7 @@ const MakeOrder = () => {
     const { isAuthenticated } = useContext(UserContext);
     const [distance, setDistance] = useState(null);
     const [price, setPrice] = useState(null);
+    const [tariff, setTariff] = useState(null);
 
     useEffect(() => {
         const makeOrder = async () => {
@@ -26,6 +27,7 @@ const MakeOrder = () => {
                     placeTo: placeTo._id,
                     distance,
                     price,
+                    tariff,
                 });
                 setOrder(res.data.response);
             } catch(err) {
@@ -85,10 +87,11 @@ const MakeOrder = () => {
                     </Grid>
                     <OrderDetails placeFrom={placeFrom} placeTo={placeTo}
                     order={order} 
-                    onSubmit={(d, pr) => {
+                    onSubmit={(d, pr, tf) => {
                         setDistance(d);
                         setPrice(pr);
                         setIsOrdering(true);
+                        setTariff(tf);
                     }}/>
                 </Grid>
             </Box>

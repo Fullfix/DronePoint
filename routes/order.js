@@ -51,6 +51,10 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
         res.data = { err: "Invalid distance" };
         return next();
     }
+    if (!req.body.tariff) {
+        res.data = { err: "Tariff missing" };
+        return next();
+    }
     const drone = await Drone.findOne();
     const order = new Order({
         placeFrom: placeFrom._id,
@@ -59,6 +63,7 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
         price: req.body.price,
         user: req.user._id,
         drone: drone._id,
+        tariff: req.body.tariff,
     });
     const newOrder = await order.save();
     res.data = newOrder;
@@ -84,6 +89,10 @@ router.post('/create/guest', async (req, res, next) => {
         res.data = { err: "Invalid distance" };
         return next();
     }
+    if (!req.body.tariff) {
+        res.data = { err: "Tariff missing" };
+        return next();
+    }
     const drone = await Drone.findOne();
     const order = new Order({
         placeFrom: placeFrom._id,
@@ -91,6 +100,7 @@ router.post('/create/guest', async (req, res, next) => {
         distance: req.body.distance,
         price: req.body.price,
         drone: drone._id,
+        tariff: req.body.tariff,
     });
     const newOrder = await order.save();
     res.data = newOrder;

@@ -123,7 +123,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                 {!order && <Box width="300px">
                     <Button variant="contained" color="primary" fullWidth style={{
                         textTransform: 'none',
-                    }} onClick={() => onSubmit(distance, parseInt(distance * tariff))}>
+                    }} onClick={() => onSubmit(distance, parseInt(distance * tariff), tariff)}>
                         <Typography variant="h3">Заказать</Typography>
                     </Button>
                 </Box>}

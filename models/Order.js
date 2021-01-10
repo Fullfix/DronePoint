@@ -19,6 +19,10 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'cannot be blank'],
     },
+    tariff: {
+        type: Number,
+        required: [true, 'cannot be blank'],
+    },
     state: {
         type: String,
         enum: ['not-started', 'in-progress', 'completed'],
