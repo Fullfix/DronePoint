@@ -16,3 +16,17 @@ export const tariffToText = {
     "150": "Быстрый",
     "69": "По подписке",
 }
+
+export const formattedDate = (datestring) => {
+    const date = new Date(datestring);
+    let dd = date.getDate();
+    let mm = date.getMonth()+1; 
+    const yyyy = date.getFullYear();
+    if (dd<10) {
+        dd='0'+dd;
+    }
+    if (mm<10) {
+        mm='0'+mm;
+    }
+    return `${dd}-${mm}-${yyyy}`;
+}

@@ -23,6 +23,10 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'cannot be blank'],
     },
+    name: {
+        type: String,
+        required: false,
+    },
     state: {
         type: String,
         enum: ['not-started', 'in-progress', 'completed'],

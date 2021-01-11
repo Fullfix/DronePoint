@@ -64,6 +64,7 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
         user: req.user._id,
         drone: drone._id,
         tariff: req.body.tariff,
+        name: req.body.name,
     });
     const newOrder = await order.save();
     res.data = newOrder;

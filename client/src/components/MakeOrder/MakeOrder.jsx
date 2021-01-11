@@ -18,6 +18,7 @@ const MakeOrder = () => {
     const [distance, setDistance] = useState(null);
     const [price, setPrice] = useState(null);
     const [tariff, setTariff] = useState(null);
+    const [comment, setComment] = useState(null);
 
     useEffect(() => {
         const makeOrder = async () => {
@@ -28,6 +29,7 @@ const MakeOrder = () => {
                     distance,
                     price,
                     tariff,
+                    name: comment,
                 });
                 setOrder(res.data.response);
             } catch(err) {
@@ -87,11 +89,12 @@ const MakeOrder = () => {
                     </Grid>
                     <OrderDetails placeFrom={placeFrom} placeTo={placeTo}
                     order={order} 
-                    onSubmit={(d, pr, tf) => {
+                    onSubmit={(d, pr, tf, cm) => {
                         setDistance(d);
                         setPrice(pr);
                         setIsOrdering(true);
                         setTariff(tf);
+                        setComment(cm !== '' && cm);
                     }}/>
                 </Grid>
             </Box>

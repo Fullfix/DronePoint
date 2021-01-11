@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, Typography, useMediaQuery } from '@material-ui/core';
+import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { formattedTime } from '../../utils/display';
@@ -34,13 +34,14 @@ const useStyles = makeStyles(theme => ({
     },
     tarifLabel: {
         marginBottom: 15,
-    }
+    },
 }))
 
 
 const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     const classes = useStyles();
     const [tariff, setTariff] = useState(100);
+    const [comment, setComment] = useState('');
 
     if (!placeFrom || !placeTo) {
         return (
@@ -110,6 +111,11 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                         </Grid>)}
                     </Grid>
                 </Grid>
+                <Grid item>
+                    <TextField variant="outlined" multiline fullWidth
+                    value={comment} onChange={e => setComment(e.target.value)}
+                    label="Название доставки"/>
+                </Grid>
                 <Grid item container justify="space-between">
                     <Grid item>
                         <Typography variant="h2">Сумма доставки</Typography>
@@ -123,7 +129,8 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                 {!order && <Box width="300px">
                     <Button variant="contained" color="primary" fullWidth style={{
                         textTransform: 'none',
-                    }} onClick={() => onSubmit(distance, parseInt(distance * tariff), tariff)}>
+                    }} onClick={() => onSubmit(
+                        distance, parseInt(distance * tariff), tariff, comment)}>
                         <Typography variant="h3">Заказать</Typography>
                     </Button>
                 </Box>}
