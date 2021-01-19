@@ -17,6 +17,14 @@ export const tariffToText = {
     "69": "По подписке",
 }
 
+export const formattedDistance = (dist) => {
+    const num = parseInt(dist)
+    if (num >= 1) {
+        return `${num} км`;
+    }
+    return `${parseInt(dist * 1000)} м`;
+}
+
 export const formattedDate = (datestring) => {
     const date = new Date(datestring);
     let dd = date.getDate();

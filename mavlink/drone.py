@@ -78,7 +78,8 @@ class DroneHandler(MongoConnection, MavlinkListener):
         print(f'Starting Order from {place_from["pos"]} to {place_to["pos"]}')
         self.delivering = True
         self.update_order(order, "in-progress")
-        self.mission_goto(place_from["pos"])
+        if self.current_dronepoint != place_from['_id']:
+            self.mission_goto(place_from["pos"])
         time.sleep(5)
         while True:
             print(f'Check Armed: {self.armed}')
@@ -95,7 +96,10 @@ class DroneHandler(MongoConnection, MavlinkListener):
             time.sleep(5)
         print('Completed Order')
         self.update_order(order, "completed")
-        self.update_drone(self.mavconn.target_system, { "ordersQuery": self.orders_query[1:] })
+        self.update_drone(self.mavconn.target_system, { 
+            "ordersQuery": self.orders_query[1:],
+            "currentDronepoint": place_to["_id"],
+        })
         self.delivering = False
 
 
@@ -109,7 +113,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
 
     def execute_query(self):
         self.orders_query = self.get_order_query()
-        print('Initialized Query')
+        self.current_dronepoint = self.get_current_dronepoint()
+        print(self.current_dronepoint)
+        print('Initialized Query and Dronepoint')
         print(self.orders_query)
         while True:
             if not self.delivering and len(self.orders_query):

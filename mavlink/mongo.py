@@ -24,6 +24,9 @@ class MongoConnection:
     def get_order_query(self):
         return self.db.drones.find_one()['ordersQuery']
     
+    def get_current_dronepoint(self):
+        return self.db.drones.find_one()['currentDronepoint']
+    
     def receive_actions(self):
         while True:
             stream = self.db.drones.watch(self.pipeline)
@@ -35,6 +38,10 @@ class MongoConnection:
                     # Handle actions
                     print(info['ordersQuery'])
                     self.orders_query = info['ordersQuery']
+                if 'currentDronepoint' in info.keys():
+                    print('Detected current Dronepoint change')
+                    print(info['currentDronepoint'])
+                    self.current_dronepoint = info['currentDronepoint']
     
     def handle_action(self, action):
         pass

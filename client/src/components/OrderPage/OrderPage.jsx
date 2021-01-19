@@ -2,7 +2,7 @@ import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/c
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { fetchOrder, droneAction } from '../../utils/api';
-import { statusToText, tariffToText } from '../../utils/display';
+import { formattedDistance, statusToText, tariffToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import DroneLocation from './DroneLocation';
@@ -56,7 +56,7 @@ const OrderPage = () => {
         },
         {
             label: 'Расстояние',
-            value: `${parseInt(order.distance)} км`,
+            value: formattedDistance(order.distance),
         },
         {
             label: `Тариф "${tariffToText[order.tariff.toString()]}"`,

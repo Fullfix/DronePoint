@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
-import { formattedTime } from '../../utils/display';
+import { formattedDistance, formattedTime } from '../../utils/display';
 
 function calcCrow([lat1, lon1], [lat2, lon2]) {
     var R = 6371; // km
@@ -65,7 +65,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
         },
         {
             label: 'Расстояние',
-            value: `${parseInt(distance)} км`,
+            value: formattedDistance(distance),
         },
         {
             label: 'Время доставки',

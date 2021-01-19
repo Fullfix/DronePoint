@@ -20,6 +20,10 @@ const droneSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'orders',
     }],
+    currentDronepoint: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DronePoint',
+    },
 });
 
 module.exports = mongoose.model('Drone', droneSchema);
