@@ -98,10 +98,6 @@ const OrderPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            {order.state === 'not-started' && <Button variant="contained" color="primary" fullWidth
-            onClick={() => droneAction(order.drone._id, order._id)}>
-                Доставить
-            </Button>}
         </React.Fragment>
     )
 }

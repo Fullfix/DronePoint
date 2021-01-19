@@ -94,8 +94,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
                 break
             time.sleep(5)
         print('Completed Order')
-        self.delivering = False
         self.update_order(order, "completed")
+        self.update_drone(self.mavconn.target_system, { "ordersQuery": self.orders_query[1:] })
+        self.delivering = False
 
 
     def handle_message(self, msg_dict):
@@ -106,17 +107,30 @@ class DroneHandler(MongoConnection, MavlinkListener):
         elif msg_dict['msgid'] == mavlink.MAVLINK_MSG_ID_HEARTBEAT:
             self.HEARTBEAT_HANDLER(msg_dict)
 
+    def execute_query(self):
+        self.orders_query = self.get_order_query()
+        print('Initialized Query')
+        print(self.orders_query)
+        while True:
+            if not self.delivering and len(self.orders_query):
+                print('Started New Order')
+                self.deliver_order(self.orders_query[0])
+            time.sleep(10)
+
     
-    def handle_action(self, action, info):
-        if action == 'order':
-            print('Order Action Received')
-            self.deliver_order(info["order"])
+    # def handle_action(self, action, info):
+    #     if action == 'order':
+    #         print('Order Action Received')
+    #         self.deliver_order(info["order"])
     
     def listen(self):
+
         thread_msg = threading.Thread(target=self.receive_messages)
         thread_act = threading.Thread(target=self.receive_actions)
+        thread_query = threading.Thread(target=self.execute_query)
         thread_msg.start()
         thread_act.start()
+        thread_query.start()
 
 listener = DroneHandler()
 listener.listen()

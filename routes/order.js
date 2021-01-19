@@ -7,6 +7,13 @@ require('dotenv/config');
 
 const router = express.Router();
 
+const addOrder = async (orderId) => {
+    const drone = await Drone.findOne()
+    drone.ordersQuery = [...drone.ordersQuery, orderId];
+    drone.markModified('ordersQuery');
+    await drone.save();
+}
+
 router.get('/all', async (req, res, next) => {
     const orders = await Order.find({}).populate('placeTo')
     .populate('placeFrom').populate('user');
@@ -68,6 +75,7 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
     });
     const newOrder = await order.save();
     res.data = newOrder;
+    await addOrder(newOrder._id);
     return next();
 });
 
@@ -104,27 +112,28 @@ router.post('/create/guest', async (req, res, next) => {
         tariff: req.body.tariff,
     });
     const newOrder = await order.save();
+    await addOrder(newOrder._id);
     res.data = newOrder;
     return next();
 });
 
-router.post('/action', async (req, res, next) => {
-    const drone = await Drone.findById(req.body.id);
-    if (!drone) {
-        res.data = { err: "Drone with this id doesn't exist" }
-        return next();
-    }
-    const order = await Order.findById(req.body.orderId);
-    if (!order) {
-        res.data = { err: "Order with this id doesn't exist" }
-        return next()
-    }
-    const newDrone = await Drone.updateOne({ _id: req.body.id }, { '$set': { 
-        action: 'order',
-        order: order._id,
-    }});
-    res.data = newDrone || 'ok';
-    return next();
-})
+// router.post('/action', async (req, res, next) => {
+//     const drone = await Drone.findById(req.body.id);
+//     if (!drone) {
+//         res.data = { err: "Drone with this id doesn't exist" }
+//         return next();
+//     }
+//     const order = await Order.findById(req.body.orderId);
+//     if (!order) {
+//         res.data = { err: "Order with this id doesn't exist" }
+//         return next()
+//     }
+//     const newDrone = await Drone.updateOne({ _id: req.body.id }, { '$set': { 
+//         action: 'order',
+//         order: order._id,
+//     }});
+//     res.data = newDrone || 'ok';
+//     return next();
+// })
 
 module.exports = router;

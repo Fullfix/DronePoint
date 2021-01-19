@@ -94,7 +94,7 @@ const MakeOrder = () => {
                         setPrice(pr);
                         setIsOrdering(true);
                         setTariff(tf);
-                        setComment(cm !== '' && cm);
+                        setComment(cm !== '' ? cm : null);
                     }}/>
                 </Grid>
             </Box>

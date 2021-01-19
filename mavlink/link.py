@@ -30,6 +30,7 @@ class MavlinkListener:
         self.latest_pos = [-1, -1]
         self.latest_landing = -1
         self.latest_alt = -1
+        self.orders_query = []
         self.current_dronepoint = None
         self.armed = False
         self.delivering = False
@@ -61,7 +62,7 @@ class MavlinkListener:
             mavlink.MAV_CMD_NAV_TAKEOFF,
             0,
             1,
-            15, 0, 0, 0,
+            15, 0, 0, math.nan,
             self.latest_pos[0],
             self.latest_pos[1],
             20,
@@ -76,7 +77,7 @@ class MavlinkListener:
             mavlink.MAV_CMD_NAV_WAYPOINT,
             0,
             1,
-            0, 10, 0, 0,
+            0, 10, 0, math.nan,
             destination[0],
             destination[1],
             20,
@@ -91,7 +92,7 @@ class MavlinkListener:
             mavlink.MAV_CMD_NAV_LAND,
             0,
             1,
-            0, 0, 0, 0,
+            0, 0, 0, math.nan,
             destination[0],
             destination[1],
             0,

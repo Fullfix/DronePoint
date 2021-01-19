@@ -21,20 +21,20 @@ class MongoConnection:
     def update_order(self, _id, state):
         self.db.orders.update_one({ "_id": _id }, { "$set": { "state": state }})
     
+    def get_order_query(self):
+        return self.db.drones.find_one()['ordersQuery']
+    
     def receive_actions(self):
         while True:
             stream = self.db.drones.watch(self.pipeline)
             for update_change in stream:
                 # Check if action was updated
                 info = update_change['updateDescription']['updatedFields']
-                if 'action' in info.keys():
+                if 'ordersQuery' in info.keys():
                     print('Detected Action Update')
                     # Handle actions
-                    self.handle_action(info['action'], info)
-                    self.db.drones.update_one({ "sysid": self.mavconn.target_system }, { "$set": {
-                        "action": "",
-                        "order": None,
-                    }})
+                    print(info['ordersQuery'])
+                    self.orders_query = info['ordersQuery']
     
     def handle_action(self, action):
         pass
