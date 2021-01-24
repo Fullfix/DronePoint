@@ -73,8 +73,8 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
         },
     ]
     const tariffes = [
-        { label: 'Обычный', value: 100 },
-        { label: 'Быстрый', value: 150 },
+        { label: 'Обычный', value: 80 },
+        { label: 'Быстрый', value: 130 },
         { label: 'По подписке', value: 69 },
     ]
 

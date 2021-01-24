@@ -12,8 +12,8 @@ export const statusToText = {
 }
 
 export const tariffToText = {
-    "100": "Обычный",
-    "150": "Быстрый",
+    "80": "Обычный",
+    "130": "Быстрый",
     "69": "По подписке",
 }
 

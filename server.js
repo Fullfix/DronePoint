@@ -25,7 +25,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(session({ secret: process.env.SECRET_KEY }))
+app.use(session({ 
+    secret: process.env.SECRET_KEY,
+    resave: true,
+    saveUninitialized: true,
+}))
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -72,6 +76,10 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 mongoose.connect(
     process.env.DB_CONNECTION,
-    { useNewUrlParser: true, useUnifiedTopology: true },
+    { 
+        useNewUrlParser: true, 
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+    },
     (err) => console.log(err ? err.message : 'Connected to Database')
 );
