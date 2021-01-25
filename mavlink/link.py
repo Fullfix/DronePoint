@@ -30,7 +30,6 @@ class MavlinkListener:
         self.latest_pos = [-1, -1]
         self.latest_landing = -1
         self.latest_alt = -1
-        self.orders_query = []
         self.current_dronepoint = None
         self.armed = False
         self.delivering = False

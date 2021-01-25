@@ -16,10 +16,6 @@ const droneSchema = mongoose.Schema({
         required: true,
         default: 1,
     },
-    ordersQuery: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'orders',
-    }],
     currentDronepoint: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DronePoint',

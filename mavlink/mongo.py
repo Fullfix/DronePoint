@@ -1,5 +1,7 @@
 import os
+import pymongo
 from pymongo import MongoClient
+from weather import is_weather_ok
 
 class MongoConnection:
     def __init__(self):
@@ -21,9 +23,43 @@ class MongoConnection:
     def update_order(self, _id, state):
         self.db.orders.update_one({ "_id": _id }, { "$set": { "state": state }})
     
-    def get_order_query(self):
-        return self.db.drones.find_one()['ordersQuery']
+    def get_from_shelf(self, dronepoint_id, order_id):
+        shelf = self.db.dronepoints.find_one({ "_id": dronepoint_id })["shelf"]
+        index = shelf.index(order_id)
+        self.db.dronepoints.update_one(
+            { "_id": dronepoint_id },
+            { "$set": { f"shelf.{index}": None }},
+        )
     
+    def put_in_shelf(self, dronepoint_id, order_id):
+        shelf = self.db.dronepoints.find_one({ "_id": dronepoint_id })["shelf"]
+        index = shelf.index(None)
+        self.db.dronepoints.update_one(
+            { "_id": dronepoint_id },
+            { "$set": { f"shelf.{index}": order_id }},
+        )
+    
+    def get_priority_order(self):
+        def order_filter(order):
+            place_from, place_to, _ = self.get_order(order['_id'])
+            # Check shelf
+            if all(place_to['shelf']):
+                return False
+            # Check weather
+            if not is_weather_ok(place_from, place_to):
+                print('Bad Weather')
+                return False
+            return True
+
+        orders = list(self.db.orders.find(
+            { "state": "not-started" }
+        ).sort([("createdAt", pymongo.ASCENDING)]))
+        orders = list(filter(order_filter, orders))
+        print('Found orders')
+        print(orders)
+        if len(orders):
+            return orders[0]
+
     def get_current_dronepoint(self):
         return self.db.drones.find_one()['currentDronepoint']
     

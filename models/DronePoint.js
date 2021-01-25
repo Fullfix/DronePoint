@@ -11,7 +11,12 @@ const pointSchema = mongoose.Schema({
     pos: {
         type: [Number],
         validate: [posValidation, 'Position must have 2 values: lat and lng'],
-    }
+    },
+    shelf: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order',
+        required: false,
+    }],
 });
 
 module.exports = mongoose.model('DronePoint', pointSchema);

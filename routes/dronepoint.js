@@ -25,6 +25,6 @@ router.post('/create', async (req, res, next) => {
         res.data = { err: err.message };
         return next();
     }
-})
+});
 
 module.exports = router;

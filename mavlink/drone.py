@@ -76,6 +76,8 @@ class DroneHandler(MongoConnection, MavlinkListener):
     def deliver_order(self, _id):
         place_from, place_to, order = self.get_order(_id)
         print(f'Starting Order from {place_from["pos"]} to {place_to["pos"]}')
+        self.put_in_shelf(place_from["_id"], _id)
+        print('Shelf initialized')
         self.delivering = True
         self.update_order(order, "in-progress")
         if self.current_dronepoint != place_from['_id']:
@@ -86,18 +88,21 @@ class DroneHandler(MongoConnection, MavlinkListener):
             if not self.armed:
                 break
             time.sleep(5)
-        self.mission_goto(place_to["pos"])
         print("First Point Reached")
+        self.get_from_shelf(place_from["_id"], _id)
+        print("Cargo taken")
+        self.mission_goto(place_to["pos"])
         time.sleep(10)
         while True:
             print(f'Check Armed: {self.armed}')
             if not self.armed:
                 break
             time.sleep(5)
-        print('Completed Order')
+        self.put_in_shelf(place_to["_id"], _id)
+        print('Cargo put')
         self.update_order(order, "completed")
-        self.update_drone(self.mavconn.target_system, { 
-            "ordersQuery": self.orders_query[1:],
+        print('Completed Order')
+        self.update_drone(self.mavconn.target_system, {
             "currentDronepoint": place_to["_id"],
         })
         self.delivering = False
@@ -112,15 +117,15 @@ class DroneHandler(MongoConnection, MavlinkListener):
             self.HEARTBEAT_HANDLER(msg_dict)
 
     def execute_query(self):
-        self.orders_query = self.get_order_query()
         self.current_dronepoint = self.get_current_dronepoint()
         print(self.current_dronepoint)
-        print('Initialized Query and Dronepoint')
-        print(self.orders_query)
+        print('Initialized Dronepoint')
         while True:
-            if not self.delivering and len(self.orders_query):
-                print('Started New Order')
-                self.deliver_order(self.orders_query[0])
+            if not self.delivering:
+                order = self.get_priority_order()
+                if order:
+                    print('Started New Order')
+                    self.deliver_order(order['_id'])
             time.sleep(10)
 
     

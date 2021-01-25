@@ -15,6 +15,9 @@ const order = require('./routes/order');
 const dronepoint = require('./routes/dronepoint');
 
 const passport = require('./config/passport');
+const DronePoint = require('./models/DronePoint');
+const Order = require('./models/Order');
+const Drone = require('./models/Drone');
 require('dotenv/config');
 
 const app = express();
@@ -83,3 +86,9 @@ mongoose.connect(
     },
     (err) => console.log(err ? err.message : 'Connected to Database')
 );
+
+// const initDP = async () => {
+//     await DronePoint.updateMany({}, { $set: { shelf: new Array(20) }})
+// }
+
+// initDP()

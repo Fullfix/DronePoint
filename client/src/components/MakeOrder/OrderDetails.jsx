@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     const classes = useStyles();
-    const [tariff, setTariff] = useState(100);
+    const [tariff, setTariff] = useState(80);
     const [comment, setComment] = useState('');
 
     if (!placeFrom || !placeTo) {
