@@ -14,7 +14,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
     const [dronePoints, setDronePoints] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedPoint, setSelectedPoint] = useState(null);
-    const [coords, setCoords] = useState([55.75, 37.57]);
+    const [coords, setCoords] = useState([54.3, 48.36]);
 
     useEffect(() => {
         const fetchDronePoints = async () => {
@@ -42,7 +42,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
             {loading && <LoadingSpinner height={'800px'}/>}
             {!loading && <Grid container direction="column">
                 <Grid item>
-                    <Map state={{ center: coords, zoom: 9 }}
+                    <Map state={{ center: coords, zoom: 12 }}
                     className="yandex-map"
                     width="100%" height="67vh">
                         {dronePoints.map(point => 
