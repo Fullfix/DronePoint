@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BottomMenu from './components/shared/BottomMenu';
 import Register from './components/Auth/Register';
+import { YMInitializer } from 'react-yandex-metrika';
 
 const theme = createMuiTheme({
   palette: {
@@ -53,6 +54,7 @@ function App() {
       <UserProvider>
         <YMaps>
           <ToastContainer />
+          <YMInitializer accounts={[72212146]} />
           <Box bgcolor="#E5E5E5">
             <Container maxWidth="xs" style={{ padding: 0 }}>
               <Box bgcolor="white" height="100vh" position="relative">
