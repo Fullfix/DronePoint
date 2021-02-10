@@ -32,6 +32,9 @@ const orderSchema = new mongoose.Schema({
         enum: ['not-started', 'in-progress', 'completed'],
         default: 'not-started',
     },
+    cargoTaken: {
+        type: Boolean,
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: false,

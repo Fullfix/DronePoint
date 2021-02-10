@@ -56,7 +56,7 @@ function App() {
           <ToastContainer />
           <YMInitializer accounts={[72212146]} />
           <Box bgcolor="#E5E5E5">
-            <Container maxWidth="xs" style={{ padding: 0 }}>
+            <Container maxWidth="sm" style={{ padding: 0 }}>
               <Box bgcolor="white" height="100vh" position="relative">
                 <Router>
                   <Box height="92.5vh" style={{ overflowY: 'scroll' }}>

@@ -1,26 +1,7 @@
 import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
-import { formattedDistance, formattedTime } from '../../utils/display';
-
-function calcCrow([lat1, lon1], [lat2, lon2]) {
-    var R = 6371; // km
-    var dLat = toRad(lat2-lat1);
-    var dLon = toRad(lon2-lon1);
-    var lat1 = toRad(lat1);
-    var lat2 = toRad(lat2);
-
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    var d = R * c;
-    return d;
-}
-
-// Converts numeric degrees to radians
-function toRad(value) {
-    return value * Math.PI / 180;
-}
+import { formattedDistance, formattedTime, calcCrow, droneVelocity } from '../../utils/display';
 
 const useStyles = makeStyles(theme => ({
     info: {
@@ -52,7 +33,6 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     }
 
     const distance = calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
-    const droneVelocity = 5;
     console.log(tariff);
     const info = [
         {

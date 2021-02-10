@@ -91,6 +91,7 @@ class DroneHandler(MongoConnection, MavlinkListener):
         print("First Point Reached")
         self.get_from_shelf(place_from["_id"], _id)
         print("Cargo taken")
+        self.take_cargo(_id)
         self.mission_goto(place_to["pos"])
         time.sleep(10)
         while True:
@@ -135,7 +136,6 @@ class DroneHandler(MongoConnection, MavlinkListener):
     #         self.deliver_order(info["order"])
     
     def listen(self):
-
         thread_msg = threading.Thread(target=self.receive_messages)
         thread_act = threading.Thread(target=self.receive_actions)
         thread_query = threading.Thread(target=self.execute_query)

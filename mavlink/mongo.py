@@ -17,13 +17,17 @@ class MongoConnection:
         order = self.db.orders.find_one({ "state": "not-started", "_id": _id })
         place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
         place_to = self.db.dronepoints.find_one({ "_id": order["placeTo"] })
-        return place_from, place_to, order["_id"],
+        return place_from, place_to, order["_id"]
     
     def update_drone(self, sysid, data):
         self.db.drones.update_one({ "sysid": sysid }, { "$set": data })
     
     def update_order(self, _id, state):
         self.db.orders.update_one({ "_id": _id }, { "$set": { "state": state }})
+
+    def take_cargo(self, _id):
+        self.db.orders.update_one({ "_id": _id }, 
+        { "$set": { "cargoTaken": True }})
     
     def get_from_shelf(self, dronepoint_id, order_id):
         shelf = self.db.dronepoints.find_one({ "_id": dronepoint_id })["shelf"]

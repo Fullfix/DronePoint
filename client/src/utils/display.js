@@ -38,3 +38,44 @@ export const formattedDate = (datestring) => {
     }
     return `${dd}-${mm}-${yyyy}`;
 }
+
+// Converts numeric degrees to radians
+function toRad(value) {
+    return value * Math.PI / 180;
+}
+
+export function calcCrow([lat1, lon1], [lat2, lon2]) {
+    var R = 6371; // km
+    var dLat = toRad(lat2-lat1);
+    var dLon = toRad(lon2-lon1);
+    var lat1 = toRad(lat1);
+    var lat2 = toRad(lat2);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    return d;
+}
+
+export const droneVelocity = 5;
+
+export const getDistanceLeft = (pos, p1, p2, cargoTaken) => {
+    let dist;
+    if (cargoTaken) {
+        dist = calcCrow(pos, p2);
+    } else {
+        dist = calcCrow(pos, p1) + calcCrow(p1, p2);
+    }
+    return dist;
+}
+
+export const getTimeLeft = (order) => {
+    const dist = getDistanceLeft(
+        order.drone.pos,
+        order.placeFrom.pos,
+        order.placeTo.pos,
+        order.cargoTaken,
+    )
+    return formattedTime(dist * 1000 / droneVelocity);
+}
