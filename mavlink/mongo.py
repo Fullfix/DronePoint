@@ -2,14 +2,16 @@ import os
 import pymongo
 from pymongo import MongoClient
 from weather import is_weather_ok
+from decouple import config
 
 class MongoConnection:
     def __init__(self):
-        self.mongo_url = 'mongodb+srv://Nenovist:O2MWyXylQmQUKSdD@cluster0.mcawk.mongodb.net/test?authSource=admin&replicaSet=atlas-ja0ogq-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true'
+        self.mongo_url = config('DB_CONNECTION')
         self.mongo_db = 'test'
         self.pipeline = [{ '$match': { 'operationType': 'update' }}]
         client = MongoClient(self.mongo_url)
         self.db = client[self.mongo_db]
+        print('CONNECTED TO DB')
     
     def get_order(self, _id):
         order = self.db.orders.find_one({ "state": "not-started", "_id": _id })
