@@ -70,7 +70,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
             </Grid>}
             <Button fullWidth variant="contained" color="primary"
             disabled={!selectedPoint}
-            style={{ position: 'relative', bottom: 0 }}
+            style={{ position: 'absolute', bottom: 0 }}
             onClick={() => {
                 const point = dronePoints.find(p => p.name === selectedPoint);
                 onSelect(point, open);

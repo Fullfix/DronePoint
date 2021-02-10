@@ -48,9 +48,9 @@ class MongoConnection:
             if all(place_to['shelf']):
                 return False
             # Check weather
-            if not is_weather_ok(place_from, place_to):
-                print('Bad Weather')
-                return False
+            # if not is_weather_ok(place_from, place_to):
+            #     print('Bad Weather')
+            #     return False
             return True
 
         orders = list(self.db.orders.find(

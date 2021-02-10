@@ -54,19 +54,21 @@ function App() {
         <YMaps>
           <ToastContainer />
           <Box bgcolor="#E5E5E5">
-            <Container maxWidth="sm">
-              <Box bgcolor="white" minHeight="100vh" position="relative">
+            <Container maxWidth="xs" style={{ padding: 0 }}>
+              <Box bgcolor="white" height="100vh" position="relative">
                 <Router>
-                  <Switch>
-                    <Route exact path="/">
-                      <Redirect to="/makeorder" />
-                    </Route>
-                    <Route exact path="/makeorder" component={MakeOrder} />
-                    <Route exact path="/order/:id" component={OrderPage} />
-                    <Route exact path="/login" component={Login}/>
-                    <Route exact path="/register" component={Register} />
-                    <ProtectedRoute exact path="/myorders" component={MyOrders} />
-                  </Switch>
+                  <Box height="92.5vh" style={{ overflowY: 'scroll' }}>
+                    <Switch>
+                      <Route exact path="/">
+                        <Redirect to="/makeorder" />
+                      </Route>
+                      <Route exact path="/makeorder" component={MakeOrder} />
+                      <Route exact path="/order/:id" component={OrderPage} />
+                      <Route exact path="/login" component={Login}/>
+                      <Route exact path="/register" component={Register} />
+                      <ProtectedRoute exact path="/myorders" component={MyOrders} />
+                    </Switch>
+                  </Box>
                   <BottomMenu />
                 </Router>
               </Box>
