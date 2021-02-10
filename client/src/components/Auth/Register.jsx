@@ -1,5 +1,6 @@
 import { Button, Grid, makeStyles, TextField } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
+import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../contexts/UserContext'
@@ -27,6 +28,10 @@ const Register = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        
+    }, []);
+
+    useEffect(() => {
         const submit = async () => {
             if (password !== password2) {
                 toast.warn('Пароли не совпадают');
@@ -44,6 +49,7 @@ const Register = () => {
     return (
         <React.Fragment>
             <HeaderMenu text={'Регистрация'}/>
+            {/* <GoogleReCaptcha /> */}
             <Grid container spacing={2} direction="column"
             className={classes.container}>
                 <Grid item container justify="center">

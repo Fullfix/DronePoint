@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BottomMenu from './components/shared/BottomMenu';
 import Register from './components/Auth/Register';
 import { YMInitializer } from 'react-yandex-metrika';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 const theme = createMuiTheme({
   palette: {
@@ -53,29 +54,32 @@ function App() {
     <ThemeProvider theme={theme}>
       <UserProvider>
         <YMaps>
-          <ToastContainer />
-          <YMInitializer accounts={[72212146]} />
-          <Box bgcolor="#E5E5E5">
-            <Container maxWidth="sm" style={{ padding: 0 }}>
-              <Box bgcolor="white" height="100vh" position="relative">
-                <Router>
-                  <Box height="92.5vh" style={{ overflowY: 'scroll' }}>
-                    <Switch>
-                      <Route exact path="/">
-                        <Redirect to="/makeorder" />
-                      </Route>
-                      <Route exact path="/makeorder" component={MakeOrder} />
-                      <Route exact path="/order/:id" component={OrderPage} />
-                      <Route exact path="/login" component={Login}/>
-                      <Route exact path="/register" component={Register} />
-                      <ProtectedRoute exact path="/myorders" component={MyOrders} />
-                    </Switch>
-                  </Box>
-                  <BottomMenu />
-                </Router>
-              </Box>
-            </Container>
-          </Box>
+          <GoogleReCaptchaProvider 
+          reCaptchaKey="6LeKOFIaAAAAAIf3BdoZJdGB_HbHt4ewbIu6pg-H">
+            <ToastContainer />
+            <YMInitializer accounts={[72212146]} />
+            <Box bgcolor="#E5E5E5">
+              <Container maxWidth="sm" style={{ padding: 0 }}>
+                <Box bgcolor="white" height="100vh" position="relative">
+                  <Router>
+                    <Box height="92.5vh" style={{ overflowY: 'scroll' }}>
+                      <Switch>
+                        <Route exact path="/">
+                          <Redirect to="/makeorder" />
+                        </Route>
+                        <Route exact path="/makeorder" component={MakeOrder} />
+                        <Route exact path="/order/:id" component={OrderPage} />
+                        <Route exact path="/login" component={Login}/>
+                        <Route exact path="/register" component={Register} />
+                        <ProtectedRoute exact path="/myorders" component={MyOrders} />
+                      </Switch>
+                    </Box>
+                    <BottomMenu />
+                  </Router>
+                </Box>
+              </Container>
+            </Box>
+          </GoogleReCaptchaProvider>
         </YMaps>
       </UserProvider>
     </ThemeProvider>
