@@ -29,7 +29,7 @@ const HeaderMenu = ({ text }) => {
         <AppBar position="sticky">
             <Toolbar>
                 <Box display="flex" className={classes.root} alignItems="center">
-                    <img src={"/logo.svg"} className={classes.img}/>
+                    <img src={"/favicon.svg"} className={classes.img}/>
                     <Typography variant="h2">{text}</Typography>
                     {isAuthenticated && <AccountCircle className={classes.user}/>}
                 </Box>

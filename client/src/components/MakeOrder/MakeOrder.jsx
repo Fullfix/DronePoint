@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Input, Typography } from '@material-ui/core'
+import { Box, Button, Grid, Input, makeStyles, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
 import DroneMap from '../shared/DroneMap';
 import HeaderMenu from '../shared/HeaderMenu';
@@ -7,6 +7,16 @@ import axios from 'axios';
 import { UserContext } from '../../contexts/UserContext';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import './MakeOrder.css';
+import clsx from 'clsx';
+
+const useStyles = makeStyles(theme => ({
+    box: {
+        width: theme.breakpoints.width('sm') - 50,
+        [theme.breakpoints.down('xs')]: {
+            width: '90%',
+        }
+    },
+}))
 
 const MakeOrder = () => {
     const [placeFrom, setPlaceFrom] = useState(null);
@@ -14,11 +24,13 @@ const MakeOrder = () => {
     const [mapOpen, setMapOpen] = useState(false);
     const [order, setOrder] = useState(null);
     const [isOrdering, setIsOrdering] = useState(false);
-    const { isAuthenticated } = useContext(UserContext);
+    const { isAuthenticated, logout } = useContext(UserContext);
     const [distance, setDistance] = useState(null);
     const [price, setPrice] = useState(null);
     const [tariff, setTariff] = useState(null);
     const [comment, setComment] = useState(null);
+    const classes = useStyles();
+    // logout()
 
     useEffect(() => {
         const makeOrder = async () => {
@@ -56,14 +68,14 @@ const MakeOrder = () => {
                     setPlaceTo(point);
                 }
             }}/>
-            <HeaderMenu text={"Оформить заказ"}/>
+            <HeaderMenu text={"Оформление заказа"}/>
             <Box position="relative"
             className="main-box"
             width="100wv">
                 <Grid container alignItems="center" direction="column"
                 spacing={3}>
-                    <Grid item>
-                        <Box width="300px">
+                    <Grid item className={clsx(classes.box)}>
+                        <Box width="100%">
                             <Typography variant="h3">Маршрут</Typography>
                             <Button variant="text" fullWidth 
                             disabled={!!order}

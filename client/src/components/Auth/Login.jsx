@@ -8,8 +8,8 @@ import LoadingSpinner from '../shared/LoadingSpinner'
 
 const useStyles = makeStyles({
     container: {
-        marginTop: '20px',
         width: '100%',
+        marginTop: 20,
     },
     input: {
          "&::placeholder": {
@@ -44,21 +44,24 @@ const Login = () => {
         <React.Fragment>
             <HeaderMenu text={'Авторизация'}/>
             <Grid container spacing={2} direction="column"
-            className={classes.container}>
+            alignItems="center" className={classes.container}>
+                <Grid item>
+                    <img src="/authDrone.png"/>
+                </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <TextField label="Логин" variant="outlined" size="small"
                         fullWidth value={username} onChange={e => setUsername(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <TextField label="Пароль" variant="outlined" type="password" size="small"
                         fullWidth value={password} onChange={e => setPassword(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Button variant="contained" color="primary" fullWidth
                         onClick={e => setSubmitting(true)}>
                             Войти
@@ -66,14 +69,14 @@ const Login = () => {
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Button variant="text" color="default" fullWidth size="small">
                             Забыли пароль
                         </Button>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Button variant="text" color="default" fullWidth size="small"
                         href="/register">
                             Зарегистрироваться

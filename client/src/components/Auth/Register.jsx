@@ -1,6 +1,6 @@
 import { Button, Grid, makeStyles, TextField } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../contexts/UserContext'
@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 const Register = () => {
     const { register } = useContext(UserContext);
+    const { executeRecaptcha } = useGoogleReCaptcha();
     const history = useHistory();
     const classes = useStyles();
     const [username, setUsername] = useState('');
@@ -27,9 +28,10 @@ const Register = () => {
     const [password2, setPassword2] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
-    useEffect(() => {
-        
-    }, []);
+    const registerAction = async () => {
+        const token = await executeRecaptcha('register');
+        if (token) setSubmitting(true);
+    }
 
     useEffect(() => {
         const submit = async () => {
@@ -49,38 +51,41 @@ const Register = () => {
     return (
         <React.Fragment>
             <HeaderMenu text={'Регистрация'}/>
-            {/* <GoogleReCaptcha /> */}
-            <Grid container spacing={2} direction="column"
+            <GoogleReCaptcha />
+            <Grid container spacing={2} direction="column" alignItems="center"
             className={classes.container}>
+                <Grid item>
+                    <img src="/authDrone.png"/>
+                </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <TextField label="Логин" variant="outlined" size="small"
                         fullWidth value={username} onChange={e => setUsername(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <TextField label="Пароль" variant="outlined" type="password" size="small"
                         fullWidth value={password} onChange={e => setPassword(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <TextField label="Подтверждение пароля" variant="outlined" type="password" 
                         size="small" fullWidth value={password2} 
                         onChange={e => setPassword2(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Button variant="contained" color="primary" fullWidth
-                        onClick={e => setSubmitting(true)}>
+                        onClick={registerAction}>
                             Зарегистрироваться
                         </Button>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Button variant="text" color="default" fullWidth size="small"
                         href="/login">
                             Логин

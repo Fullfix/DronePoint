@@ -14,6 +14,7 @@ import BottomMenu from './components/shared/BottomMenu';
 import Register from './components/Auth/Register';
 import { YMInitializer } from 'react-yandex-metrika';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { Helmet } from 'react-helmet';
 
 const theme = createMuiTheme({
   palette: {
@@ -55,9 +56,24 @@ function App() {
       <UserProvider>
         <YMaps>
           <GoogleReCaptchaProvider 
-          reCaptchaKey="6LeKOFIaAAAAAIf3BdoZJdGB_HbHt4ewbIu6pg-H">
+          reCaptchaKey="6LeKOFIaAAAAAIf3BdoZJdGB_HbHt4ewbIu6pg-H"
+          language="RU">
             <ToastContainer />
             <YMInitializer accounts={[72212146]} />
+            <Helmet>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="theme-color" content={theme.palette.primary.main} />
+            <meta
+              name="description"
+              content="Приложение для доставки дронами"
+            />
+            <link rel="icon" href="/favicon.svg" />
+            <title>DeliDrone</title>
+            <link rel="apple-touch-icon" href="/favicon.svg" />
+            <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+            </Helmet>
             <Box bgcolor="#E5E5E5">
               <Container maxWidth="sm" style={{ padding: 0 }}>
                 <Box bgcolor="white" height="100vh" position="relative">

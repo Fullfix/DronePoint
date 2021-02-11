@@ -5,8 +5,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        position: 'absolute',
-        bottom: 0,
         width: '100%',
         backgroundColor: theme.palette.primary.main,
     },

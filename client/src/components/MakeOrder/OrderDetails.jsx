@@ -1,11 +1,15 @@
-import { Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary,
+     Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { formattedDistance, formattedTime, calcCrow, droneVelocity } from '../../utils/display';
 
 const useStyles = makeStyles(theme => ({
     info: {
-        width: 330,
+        width: theme.breakpoints.width('sm') - 50,
+        [theme.breakpoints.down('xs')]: {
+            width: '90%'
+        },
     },
     tarif: {
         marginTop: 20,
@@ -16,6 +20,9 @@ const useStyles = makeStyles(theme => ({
     tarifLabel: {
         marginBottom: 15,
     },
+    accordion: {
+        boxShadow: 'none',
+    }
 }))
 
 
@@ -23,43 +30,42 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
     const classes = useStyles();
     const [tariff, setTariff] = useState(80);
     const [comment, setComment] = useState('');
+    const placed = !!(placeTo && placeFrom);
 
-    if (!placeFrom || !placeTo) {
-        return (
-            <Typography variant="h3" align="center">
-                Выберите место отправления и доставки, чтобы оформить заказ
-            </Typography>
-        )
-    }
-
-    const distance = calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
+    const distance = placed && calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
     console.log(tariff);
     const info = [
         {
             label: 'Старт',
-            value: placeFrom.name,
+            value: placeFrom?.name || '-',
         },
         {
             label: 'Финиш',
-            value: placeTo.name,
+            value: placeTo?.name || '-',
         },
         {
             label: 'Расстояние',
-            value: formattedDistance(distance),
+            value: placed ? formattedDistance(distance) : '-',
         },
         {
             label: 'Время доставки',
-            value: formattedTime(distance * 1000 / droneVelocity),
+            value: placed ? formattedTime(distance * 1000 / droneVelocity) : '-',
         },
     ]
     const tariffes = [
-        { label: 'Обычный', value: 80 },
-        { label: 'Быстрый', value: 130 },
-        { label: 'По подписке', value: 69 },
+        { label: 'Обычный', value: 80, desc: 'Разовая пересылка от одного дронпоинта к другому.' },
+        { label: 'Быстрый', value: 130, 
+            desc: 'Разовая пересылка от одного дронпоинта к другому, однако Ваш заказ будет доставлен раньше остальных.' },
+        { label: 'По подписке', value: 69, 
+            desc: 'Выгодное решение для компаний, занимающимися частыми пересылками. Экономия составит 10%, а подписку можно оформить на разное количество отправок, в зависимости от ваших потребностей.' 
+        },
     ]
 
     return (
         <React.Fragment>
+            {!placed && <Typography variant="h3" align="center" color="textSecondary">
+                Выберите место отправления и доставки, чтобы оформить заказ
+            </Typography>}
             <Grid item container spacing={2} direction="column" className={classes.info}>
                 {info.map(inf => 
                 <Grid item container justify="space-between"
@@ -76,18 +82,29 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                     className={classes.tarifLabel}>Выбор тарифа</Typography>
                     <Grid container spacing={1} direction="column">
                         {tariffes.map(tarif => 
-                        <Grid item container justify="space-between" alignItems="center">
-                            <Grid item>
-                                <Typography variant="h4" component="span">
-                                    <Radio color="primary" className={classes.radio}
-                                    checked={tariff === tarif.value}
-                                    onChange={() => setTariff(tarif.value)}/>
-                                    {tarif.label} ({tarif.value} ₽/км)
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <Info />
-                            </Grid>
+                        <Grid item>
+                            <Accordion className={classes.accordion}>
+                                <AccordionSummary>
+                                    <Grid container justify="space-between" alignItems="center">
+                                        <Grid item>
+                                            <Typography variant="h4" component="span">
+                                                <Radio color="primary" className={classes.radio}
+                                                checked={tariff === tarif.value}
+                                                onChange={() => setTariff(tarif.value)}/>
+                                                {tarif.label} ({tarif.value} ₽/км)
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Info />
+                                        </Grid>
+                                    </Grid>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Typography variant="h5">
+                                        {tarif.desc}
+                                    </Typography>
+                                </AccordionDetails>
+                            </Accordion>
                         </Grid>)}
                     </Grid>
                 </Grid>
@@ -101,7 +118,9 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                         <Typography variant="h2">Сумма доставки</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant="h2">{parseInt(distance * tariff)} ₽</Typography>
+                        <Typography variant="h2">
+                            {placed ? parseInt(distance * tariff) : '-'} ₽
+                        </Typography>
                     </Grid>
                 </Grid>
             </Grid>
