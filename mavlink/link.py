@@ -48,6 +48,12 @@ class MavlinkListener:
             homelocation[1], # lon
             altitude)
     
+    def take_cargo_action(self):
+        time.sleep(10)
+    
+    def put_cargo_action(self):
+        time.sleep(10)
+
     def mission_goto(self, destination):
         print('Initiating Mission')
         wp.clear()

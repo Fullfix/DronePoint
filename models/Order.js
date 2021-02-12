@@ -29,7 +29,8 @@ const orderSchema = new mongoose.Schema({
     },
     state: {
         type: String,
-        enum: ['not-started', 'in-progress', 'completed'],
+        enum: ['not-started', 'in-progress', 'completed', 
+        'taking-cargo', 'putting-cargo'],
         default: 'not-started',
     },
     cargoTaken: {

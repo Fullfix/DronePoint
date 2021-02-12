@@ -7,6 +7,8 @@ export const formattedTime = (s) => {
 
 export const statusToText = {
     "not-started": { text: "Ещё не началась", color: "#365EE7" },
+    "taking-cargo": { text: "Забирает груз", color: "#696969" },
+    "putting-cargo": { text: "Ложит груз", color: "#696969" },
     "in-progress": { text: "В процессе", color: "#696969" },
     "completed": { text: "Заказ доставлен", color: "#3AB665" },
 }

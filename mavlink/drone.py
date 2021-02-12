@@ -89,9 +89,12 @@ class DroneHandler(MongoConnection, MavlinkListener):
                 break
             time.sleep(5)
         print("First Point Reached")
+        self.update_order(order, "taking-cargo")
+        self.take_cargo_action()
         self.get_from_shelf(place_from["_id"], _id)
         print("Cargo taken")
         self.take_cargo(_id)
+        self.update_order(order, "in-progress")
         self.mission_goto(place_to["pos"])
         time.sleep(10)
         while True:
@@ -99,6 +102,8 @@ class DroneHandler(MongoConnection, MavlinkListener):
             if not self.armed:
                 break
             time.sleep(5)
+        self.update_order(order, 'putting-cargo')
+        self.put_cargo_action()
         self.put_in_shelf(place_to["_id"], _id)
         print('Cargo put')
         self.update_order(order, "completed")

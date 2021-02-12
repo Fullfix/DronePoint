@@ -1,8 +1,8 @@
 import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import { fetchOrder, droneAction } from '../../utils/api';
-import { formattedDistance, getDistanceLeft, getTimeLeft, statusToText, tariffToText } from '../../utils/display';
+import { fetchOrder, droneAction, fetchTimeLeft } from '../../utils/api';
+import { formattedDistance, formattedTime, getDistanceLeft, getTimeLeft, statusToText, tariffToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import DroneLocation from './DroneLocation';
@@ -26,11 +26,14 @@ const OrderPage = () => {
     const classes = useStyles();
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState(null);
+    const [timeLeft, setTimeLeft] = useState(null);
 
     useEffect(() => {
         const getOrder = async () => {
             const order = await fetchOrder(id);
+            const time = await fetchTimeLeft(id);
             setOrder(order);
+            setTimeLeft(time);
             setLoading(false);
         }
         if (loading) getOrder();
@@ -58,10 +61,10 @@ const OrderPage = () => {
             label: 'Расстояние',
             value: formattedDistance(order.distance),
         },
-        {
+        ...((order.state !== 'completed') ? [{
             label: 'Осталось времени',
-            value: getTimeLeft(order), 
-        },
+            value: formattedTime(timeLeft), 
+        }] : []),
         {
             label: `Тариф "${tariffToText[order.tariff.toString()]}"`,
             value: `${order.tariff} ₽/км`,

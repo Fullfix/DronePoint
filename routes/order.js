@@ -3,6 +3,7 @@ const passport = require('passport');
 const Drone = require('../models/Drone');
 const DronePoint = require('../models/DronePoint');
 const Order = require('../models/Order');
+const { getOrderQueue, getTimeLeft } = require('../services/order');
 require('dotenv/config');
 
 const router = express.Router();
@@ -68,6 +69,27 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
     });
     const newOrder = await order.save();
     res.data = newOrder;
+    return next();
+});
+
+router.get('/gettimeleft/:id', async (req, res, next) => {
+    const order = await Order.findById(req.params.id).populate('drone')
+    .populate('placeFrom').populate('placeTo');
+    if (!order) {
+        res.data = { err: 'Invalid Order ID' };
+        return next();
+    }
+    if (order.state !== 'not-started') {
+        res.data = getTimeLeft(order);
+        return next();
+    }
+    const orders = await getOrderQueue();
+    let timeLeft = 0;
+    for (const order2 of orders) {
+        timeLeft += getTimeLeft(order2);
+        if (order2._id.toString() === order._id.toString()) break;
+    }
+    res.data = timeLeft;
     return next();
 });
 

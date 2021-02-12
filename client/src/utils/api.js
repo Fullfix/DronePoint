@@ -21,6 +21,15 @@ export const fetchOrder = async (id) => {
     }
 }
 
+export const fetchTimeLeft = async (id) => {
+    try {
+        const res = await axios.get(`/api/order/gettimeleft/${id}`);
+        return res.data.response;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export const droneAction = async (id, orderId) => {
     try {
         const res = await axios.post('/api/order/action', { id, orderId });
