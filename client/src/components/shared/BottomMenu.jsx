@@ -5,8 +5,13 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
+        width: theme.breakpoints.width('sm'),
         backgroundColor: theme.palette.primary.main,
+        position: 'fixed',
+        bottom: 0,
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+        }
     },
     button: {
         color: theme.palette.primary.contrastText,

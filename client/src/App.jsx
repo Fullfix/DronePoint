@@ -1,4 +1,4 @@
-import { Box, Button, Container, createMuiTheme, ThemeProvider, Typography } from '@material-ui/core';
+import { Box, Button, Container, createMuiTheme, makeStyles, ThemeProvider, Typography } from '@material-ui/core';
 import { YMaps } from 'react-yandex-maps';
 import './App.css';
 import UserProvider from './contexts/UserContext';
@@ -51,8 +51,21 @@ const theme = createMuiTheme({
   }
 })
 
+const useStyles = makeStyles(theme => ({
+  box: {
+    overflowY: 'scroll', 
+    overflowX: 'hidden',
+    position: 'fixed',
+    width: theme.breakpoints.width('sm'),
+    [theme.breakpoints.down('xs')]: {
+        width: '100%',
+    }
+  }
+}))
+
 function App() {
   const size = useWindowSize();
+  const classes = useStyles();
 
   return (
     <ThemeProvider theme={theme}>
@@ -81,9 +94,9 @@ function App() {
               <Container maxWidth="sm" style={{ padding: 0 }}>
                 <Box bgcolor="white" height="100vh">
                   <Router>
-                    <Box style={{ 
-                      overflowY: 'scroll', 
-                      height: size.height - 56 }}>
+                    <Box className={classes.box} style={{
+                      height: size.height - 56,
+                    }}>
                       <Switch>
                         <Route exact path="/">
                           <Redirect to="/makeorder" />

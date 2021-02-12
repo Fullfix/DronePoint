@@ -1,16 +1,39 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { Map, Placemark } from 'react-yandex-maps';
 import { AppBar, Box, Dialog, IconButton, List, ListItem, 
-    ListItemIcon, Slide, Toolbar, Typography, ListItemText, Grid, Button } from '@material-ui/core';
+    ListItemIcon, Slide, Toolbar, Typography, ListItemText, Grid, Button, makeStyles } from '@material-ui/core';
 import { Close as CloseIcon, LocationOn } from '@material-ui/icons';
 import axios from 'axios';
 import LoadingSpinner from './LoadingSpinner';
+
+const useStyles = makeStyles(theme => ({
+    mainGrid: {
+        height: 'calc(100vh - 64px)',
+        overflowY: 'hidden',
+        [theme.breakpoints.down('xs')]: {
+            height: 'calc(100vh - 56px)',
+        }
+    },
+    mapGrid: {
+        height: '60vh',
+        display: 'block',
+    },
+    list: {
+        overflowY: 'scroll',
+        height: 'calc(40vh - 64px - 36px)',
+        [theme.breakpoints.down('xs')]: {
+            height: 'calc(40vh - 56px - 36px)',
+        },
+        padding: 0,
+    }
+}))
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const DroneMap = ({ open, onClose, onSelect }) => {
+    const classes = useStyles();
     const [dronePoints, setDronePoints] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedPoint, setSelectedPoint] = useState(null);
@@ -27,7 +50,9 @@ const DroneMap = ({ open, onClose, onSelect }) => {
 
     return (
         <Dialog fullScreen open={!!open} onClose={onClose}
-        TransitionComponent={Transition}>
+        TransitionComponent={Transition} style={{
+            overflowY: 'hidden',
+        }}>
             <AppBar position="sticky">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={onClose}
@@ -40,11 +65,11 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                 </Toolbar>
             </AppBar>
             {loading && <LoadingSpinner height={'800px'}/>}
-            {!loading && <Grid container direction="column">
-                <Grid item>
+            {!loading && <Grid container className={classes.mainGrid}>
+                <Grid item xs={12} className={classes.mapGrid}>
                     <Map state={{ center: coords, zoom: 12 }}
                     className="yandex-map"
-                    width="100%" height="67vh">
+                    width="100%" height="60vh">
                         {dronePoints.map(point => 
                         <Placemark key={point.name} geometry={point.pos}
                         onClick={() => {
@@ -54,8 +79,8 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                         options={{ iconColor: point.name === selectedPoint ? 'red' : 'blue' }}/>)}
                     </Map>
                 </Grid>
-                <Grid item>
-                    <List component="nav" style={{ height: '20vh', overflow: 'auto' }}>
+                <Grid item xs={12}>
+                    <List component="nav" className={classes.list}>
                         {dronePoints.map(point => 
                         <ListItem button selected={point.name === selectedPoint}
                         key={point.name}
@@ -74,7 +99,6 @@ const DroneMap = ({ open, onClose, onSelect }) => {
             </Grid>}
             <Button fullWidth variant="contained" color="primary"
             disabled={!selectedPoint}
-            style={{ position: 'absolute', bottom: 0 }}
             onClick={() => {
                 const point = dronePoints.find(p => p.name === selectedPoint);
                 onSelect(point, open);
