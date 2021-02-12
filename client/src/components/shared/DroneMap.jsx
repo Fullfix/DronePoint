@@ -47,6 +47,10 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                     width="100%" height="67vh">
                         {dronePoints.map(point => 
                         <Placemark key={point.name} geometry={point.pos}
+                        onClick={() => {
+                            setSelectedPoint(p => p === point.name ? null : point.name);
+                            setCoords(point.pos);
+                        }}
                         options={{ iconColor: point.name === selectedPoint ? 'red' : 'blue' }}/>)}
                     </Map>
                 </Grid>
