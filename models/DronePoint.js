@@ -8,6 +8,11 @@ const pointSchema = mongoose.Schema({
         required: [true, 'cannot be blank'],
         unique: true,
     },
+    address: {
+        type: String,
+        required: [true, 'cannot be blank'],
+        unique: true,
+    },
     pos: {
         type: [Number],
         validate: [posValidation, 'Position must have 2 values: lat and lng'],

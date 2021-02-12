@@ -92,7 +92,8 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                                 <LocationOn color={point.name === selectedPoint ? 
                                 'secondary' : 'inherit'}/>
                             </ListItemIcon>
-                            <ListItemText primary={point.name}/>
+                            <ListItemText primary={point.name} 
+                            secondary={point.address}/>
                         </ListItem>)}
                     </List>
                 </Grid>
