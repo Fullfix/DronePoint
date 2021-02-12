@@ -14,6 +14,7 @@ import BottomMenu from './components/shared/BottomMenu';
 import Register from './components/Auth/Register';
 import { YMInitializer } from 'react-yandex-metrika';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import useWindowSize from './hooks/useWindowSize'
 import { Helmet } from 'react-helmet';
 
 const theme = createMuiTheme({
@@ -51,6 +52,7 @@ const theme = createMuiTheme({
 })
 
 function App() {
+  const size = useWindowSize();
   return (
     <ThemeProvider theme={theme}>
       <UserProvider>
@@ -76,9 +78,11 @@ function App() {
             </Helmet>
             <Box bgcolor="#E5E5E5">
               <Container maxWidth="sm" style={{ padding: 0 }}>
-                <Box bgcolor="white" height="100vh" position="relative">
+                <Box bgcolor="white" height="100vh">
                   <Router>
-                    <Box height="92.5vh" style={{ overflowY: 'scroll' }}>
+                    <Box style={{ 
+                      overflowY: 'scroll', 
+                      height: size.height - 56 }}>
                       <Switch>
                         <Route exact path="/">
                           <Redirect to="/makeorder" />
