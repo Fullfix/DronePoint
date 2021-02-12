@@ -53,6 +53,7 @@ const theme = createMuiTheme({
 
 function App() {
   const size = useWindowSize();
+
   return (
     <ThemeProvider theme={theme}>
       <UserProvider>

@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
-import { AppBar, Box, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+import { AppBar, Box, IconButton, makeStyles, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { UserContext } from '../../contexts/UserContext';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,19 +20,48 @@ const useStyles = makeStyles(theme => ({
         width: '44px',
         position: 'absolute',
         right: 10,
+    },
+    userIcon: {
+        height: '44px',
+        width: '44px',
+        color: 'white',
     }
 }))
 
 const HeaderMenu = ({ text }) => {
     const classes = useStyles();
-    const { isAuthenticated } = useContext(UserContext);
+    const { isAuthenticated, logout } = useContext(UserContext);
+    const history = useHistory();
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleLogout = () => {
+        logout();
+        history.push('/login');
+    }
+
     return (
         <AppBar position="sticky">
             <Toolbar>
                 <Box display="flex" className={classes.root} alignItems="center">
                     <img src={"/favicon.svg"} className={classes.img}/>
                     <Typography variant="h2">{text}</Typography>
-                    {isAuthenticated && <AccountCircle className={classes.user}/>}
+                    {isAuthenticated && <React.Fragment>
+                        <IconButton className={classes.user}
+                        aria-controls="user-menu"
+                        aria-haspopup="true"
+                        onClick={(e) => setAnchorEl(e.currentTarget)}>
+                            <AccountCircle className={classes.userIcon}/>
+                        </IconButton>
+                        <Menu id="user-menu" keepMounted
+                        anchorEl={anchorEl}
+                        open={!!anchorEl}
+                        onClose={() => setAnchorEl(null)}>
+                            <MenuItem>Профиль</MenuItem>
+                            <MenuItem onClick={handleLogout}
+                            >Выйти из аккаунта</MenuItem>
+                        </Menu>
+
+                    </React.Fragment>}
                 </Box>
             </Toolbar>
         </AppBar>

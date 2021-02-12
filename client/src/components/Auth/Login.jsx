@@ -1,5 +1,5 @@
 import { Button, Grid, makeStyles, TextField } from '@material-ui/core'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../contexts/UserContext'
@@ -25,7 +25,15 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const loginBtn = useRef();
 
+    useEffect(() => {
+        document.onkeypress = e => {
+            if (e.code === 'Enter') {
+                loginBtn.current.click();
+            }
+        }
+    }, []);
     useEffect(() => {
         const submit = async () => {
             const success = await login({ username, password });
@@ -51,19 +59,21 @@ const Login = () => {
                 <Grid item container justify="center">
                     <Grid item xs={11}>
                         <TextField label="Логин" variant="outlined" size="small"
+                        autoComplete="username"
                         fullWidth value={username} onChange={e => setUsername(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={11}>
                         <TextField label="Пароль" variant="outlined" type="password" size="small"
+                        autoComplete="password"
                         fullWidth value={password} onChange={e => setPassword(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={11}>
                         <Button variant="contained" color="primary" fullWidth
-                        onClick={e => setSubmitting(true)}>
+                        onClick={e => setSubmitting(true)} ref={loginBtn}>
                             Войти
                         </Button>
                     </Grid>
