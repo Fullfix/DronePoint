@@ -4,6 +4,7 @@ import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../contexts/UserContext'
+import { emailRe } from '../../utils/api'
 import HeaderMenu from '../shared/HeaderMenu'
 
 const useStyles = makeStyles(theme => ({
@@ -15,11 +16,11 @@ const useStyles = makeStyles(theme => ({
          "&::placeholder": {
         color: "gray"
       },
-    }
+    },
 }))
 
 const Register = () => {
-    const { register } = useContext(UserContext);
+    const { register, reload } = useContext(UserContext);
     const { executeRecaptcha } = useGoogleReCaptcha();
     const history = useHistory();
     const classes = useStyles();
@@ -29,18 +30,24 @@ const Register = () => {
     const [submitting, setSubmitting] = useState(false);
 
     const registerAction = async () => {
-        const token = await executeRecaptcha('register');
-        if (token) setSubmitting(true);
+        // const token = await executeRecaptcha('register');
+        // if (token) setSubmitting(true);
+        setSubmitting(true);
     }
 
     useEffect(() => {
         const submit = async () => {
             if (password !== password2) {
-                toast.warn('Пароли не совпадают');
+                toast.error('Пароли не совпадают');
+                return setSubmitting(false);
+            }
+            if (!emailRe.test(username)) {
+                toast.error('Некорректный Email');
                 return setSubmitting(false);
             }
             const success = await register({ username, password });
             if (success) {
+                reload();
                 return history.push('/');
             }
             setSubmitting(false);
@@ -59,8 +66,9 @@ const Register = () => {
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={11}>
-                        <TextField label="Логин" variant="outlined" size="small"
-                        fullWidth value={username} onChange={e => setUsername(e.target.value)}/>
+                        <TextField label="Логин (Email)" variant="outlined" size="small"
+                        fullWidth value={username}
+                        onChange={e => setUsername(e.target.value)}/>
                     </Grid>
                 </Grid>
                 <Grid item container justify="center">

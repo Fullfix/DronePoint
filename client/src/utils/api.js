@@ -25,6 +25,8 @@ const errorHandler = async (func) => {
     }
 }
 
+export const emailRe = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 export const fetchMyOrders = async () => {
     try {
         const res = await axios.get('/api/order/me');

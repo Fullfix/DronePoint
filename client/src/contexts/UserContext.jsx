@@ -9,6 +9,7 @@ export const UserContext = createContext({
     logout: () => {},
     login: async ({ username, password }) => {},
     register: async ({ username, password }) => {},
+    reload: async () => {},
 })
 
 const UserProvider = ({ children }) => {
@@ -25,7 +26,7 @@ const UserProvider = ({ children }) => {
     const login = async ({ username, password }) => {
         try {
             const res = await axios.post('/api/auth/login', {
-                username,
+                email: username,
                 password,
             });
             localStorage.setItem('token', res.data.response.token);
@@ -37,15 +38,19 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const reload = async () => {
+        setLoading(true);
+    }
+
     const register = async ({ username, password }) => {
         try {
             const resRegister = await axios.post('/api/auth/signup', {
-                username,
+                email: username,
                 password
             });
             toast.success('Аккаунт зарегестрирован');
             const res = await axios.post('/api/auth/login', {
-                username,
+                email: username,
                 password,
             });
             localStorage.setItem('token', res.data.response.token);
@@ -78,6 +83,7 @@ const UserProvider = ({ children }) => {
             logout: logout,
             login: login,
             register: register,
+            reload: reload,
         }}>
             {children}
         </UserContext.Provider>

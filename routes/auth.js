@@ -40,9 +40,12 @@ router.post('/signup', (req, res, next) => {
 });
 
 // example
-router.get('/me', passport.authenticate('jwt'), (req, res, next) => {
-    res.data = { user: req.user };
-    next();
+router.get('/me', passport.authenticate('jwt'), async (req, res, next) => {
+    const user = await User.findById(req.user._id);
+    user.icon = Math.floor(Math.random() * 20) + 1;
+    const newUser = await user.save();
+    res.data = { user: newUser };
+    return next();
 });
 
 module.exports = router;

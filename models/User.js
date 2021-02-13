@@ -2,16 +2,22 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = mongoose.Schema({
-    username: {
+    email: {
         type: String,
-        match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+        match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        'is invalid'],
         required: [true, 'cannot be blank'],
         unique: true
     },
     password: {
         type: String,
         required: [true, 'cannot be blank']
-    }
+    },
+    icon: {
+        type: Number,
+        required: [true, 'cannot be blank'],
+        default: 1,
+    },
 });
 
 userSchema.methods.generateHash = function(password) {

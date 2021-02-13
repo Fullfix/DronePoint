@@ -33,11 +33,11 @@ passport.use(new JwtStrategy({
 
 // login
 passport.use('local-login', new LocalStrategy({
-    usernameField: 'username',
+    usernameField: 'email',
     passwordField: 'password'
-}, async (username, password, done) => {
+}, async (email, password, done) => {
     try {
-        let user = await User.findOne({ username }).exec();
+        let user = await User.findOne({ email }).exec();
         if (!user)
             return done(null, false, { message: 'Incorrect username' });
         if (!user.validPassword(password))
@@ -51,14 +51,14 @@ passport.use('local-login', new LocalStrategy({
 
 // sign up
 passport.use('local-signup', new LocalStrategy({
-    usernameField: 'username',
+    usernameField: 'email',
     passwordField: 'password',
-}, async (username, password, done) => {
+}, async (email, password, done) => {
     try {
-        let user = await User.findOne({ username }).exec();
+        let user = await User.findOne({ email }).exec();
         if (user)
-            return done(null, false, { message: 'That username is already taken' });
-        let newUser = new User({ username });
+            return done(null, false, { message: 'That email is already taken' });
+        let newUser = new User({ email });
         newUser.password = newUser.generateHash(password);
         newUser = await newUser.save();
         return done(null, newUser, { message: 'Signed up successfully' });

@@ -26,21 +26,23 @@ const useStyles = makeStyles(theme => ({
         marginRight: '20px',
     },
     user: {
-        height: '44px',
-        width: '44px',
+        height: '55px',
+        width: '55px',
         position: 'absolute',
+        // backgroundColor: '#333333',
+        border: 'none',
         right: 10,
     },
     userIcon: {
-        height: '44px',
-        width: '44px',
+        height: '55px',
+        width: '55px',
         color: 'white',
-    }
+    },
 }))
 
 const HeaderMenu = ({ text }) => {
     const classes = useStyles();
-    const { isAuthenticated, logout } = useContext(UserContext);
+    const { isAuthenticated, logout, user } = useContext(UserContext);
     const history = useHistory();
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -61,7 +63,8 @@ const HeaderMenu = ({ text }) => {
                             aria-controls="user-menu"
                             aria-haspopup="true"
                             onClick={(e) => setAnchorEl(e.currentTarget)}>
-                                <AccountCircle className={classes.userIcon}/>
+                                <img src={`/icons/${user.icon}.svg`} 
+                                className={classes.userIcon}/>
                             </IconButton>
                             <Menu id="user-menu" keepMounted
                             anchorEl={anchorEl}

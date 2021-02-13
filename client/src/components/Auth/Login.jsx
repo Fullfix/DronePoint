@@ -58,8 +58,10 @@ const Login = () => {
                 </Grid>
                 <Grid item container justify="center">
                     <Grid item xs={11}>
-                        <TextField label="Логин" variant="outlined" size="small"
-                        autoComplete="username"
+                        <TextField label="Логин (Email)" variant="outlined" 
+                        type="email"
+                        size="small"
+                        autoComplete="email"
                         fullWidth value={username} onChange={e => setUsername(e.target.value)}/>
                     </Grid>
                 </Grid>
