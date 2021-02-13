@@ -1,7 +1,7 @@
 import { Divider, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { fetchMyOrders } from '../../utils/api';
-import { formattedDate } from '../../utils/display';
+import { formattedDate, statusToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -54,7 +54,10 @@ const MyOrders = () => {
                                 <ChevronRightIcon />
                             </ListItemIcon>
                             <ListItemText primary={`${order.name || '-Без названия-'}`}
-                            primaryTypographyProps={{ className: classes.name }}/>
+                            primaryTypographyProps={{ className: classes.name }}
+                            secondary={statusToText[order.state].text}
+                            secondaryTypographyProps={{ style: 
+                            { color: statusToText[order.state].color}}}/>
                             <ListItemText primary={`Цена: ${order.price} ₽`}
                             className={classes.right}
                             secondary={getInfo(order)}/>

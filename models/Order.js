@@ -29,9 +29,19 @@ const orderSchema = new mongoose.Schema({
     },
     state: {
         type: String,
-        enum: ['not-started', 'in-progress', 'completed', 
-        'taking-cargo', 'putting-cargo'],
-        default: 'not-started',
+        enum: [
+            'waiting-input',
+            'inserting-cargo',
+            'not-started',
+            'in-progress', 
+            'completed', 
+            'taking-cargo', 
+            'putting-cargo',
+            'waiting-cargo',
+            'giving-cargo',
+            'cargo-given',
+        ],
+        default: 'waiting-input',
     },
     cargoTaken: {
         type: Boolean,

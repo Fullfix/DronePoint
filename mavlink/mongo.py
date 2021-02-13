@@ -13,6 +13,12 @@ class MongoConnection:
         self.db = client[self.mongo_db]
         print('CONNECTED TO DB')
     
+    def get_full_order(self, _id):
+        order = self.db.orders.find_one({ "_id": _id })
+        place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
+        place_to = self.db.dronepoints.find_one({ "_id": order["placeTo"] })
+        return place_from, place_to, order["_id"]
+    
     def get_order(self, _id):
         order = self.db.orders.find_one({ "state": "not-started", "_id": _id })
         place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
@@ -84,6 +90,23 @@ class MongoConnection:
                     print('Detected current Dronepoint change')
                     print(info['currentDronepoint'])
                     self.current_dronepoint = info['currentDronepoint']
+
+    def receive_state(self):
+        print('Start watching states')
+        while True:
+            stream = self.db.orders.watch(self.pipeline)
+            for update_change in stream:
+                info = update_change['updateDescription']['updatedFields']
+                if 'state' in info.keys():
+                    if info['state'] == 'inserting-cargo':
+                        self.INSERT_ACTION_HANDLER(
+                            update_change['documentKey']['_id'])
+                    if info['state'] == 'giving-cargo':
+                        self.GIVE_ACTION_HANDLER(
+                            update_change['documentKey']['_id'])
+                    if info['state'] == 'completed':
+                        self.RETURN_ACTION_HANDLER(
+                            update_change['documentKey']['_id'])
     
     def handle_action(self, action):
         pass

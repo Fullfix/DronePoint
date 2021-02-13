@@ -6,11 +6,16 @@ export const formattedTime = (s) => {
 }
 
 export const statusToText = {
-    "not-started": { text: "Ещё не началась", color: "#365EE7" },
-    "taking-cargo": { text: "Забирает груз", color: "#696969" },
-    "putting-cargo": { text: "Ложит груз", color: "#696969" },
-    "in-progress": { text: "В процессе", color: "#696969" },
-    "completed": { text: "Заказ доставлен", color: "#3AB665" },
+    "waiting-input": { text: 'Ожидает приём груза', color: '#365EE7' },
+    'inserting-cargo': { text: 'Принимает груз', color: '#365EE7' },
+    "not-started": { text: "Ожидает начала доставки", color: "#365EE7" },
+    "taking-cargo": { text: "Забирает груз в Дрон", color: "#696969" },
+    "putting-cargo": { text: "Извлекает груз из Дрона", color: "#696969" },
+    "in-progress": { text: "Доставляет", color: "#696969" },
+    "waiting-cargo": { text: 'Ожидает выдачи', color: '#365EE7' },
+    "giving-cargo": { text: 'Выдаёт груз', color: '#365EE7' },
+    "cargo-given": { text: 'Ожидает возврата контейнера', color: '#365EE7' },
+    "completed": { text: "Заказ выполнен", color: "#3AB665" },
 }
 
 export const tariffToText = {

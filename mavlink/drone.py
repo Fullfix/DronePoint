@@ -72,12 +72,35 @@ class DroneHandler(MongoConnection, MavlinkListener):
             -1, 0, 0, math.nan, math.nan, math.nan, 500,
         )
         print('Takeoff Action Completed')
+    
+    def INSERT_ACTION_HANDLER(self, _id):
+        
+        place_from, place_to, order = self.get_full_order(_id)
+        print('Start Inserting')
+        time.sleep(10)
+        self.put_in_shelf(place_from["_id"], _id)
+        self.update_order(_id, 'not-started')
+        print('Inserted Cargo Successfully')
+    
+    def GIVE_ACTION_HANDLER(self, _id):
+        place_from, place_to, order = self.get_full_order(_id)
+        print('Start Giving')
+        time.sleep(10)
+        self.get_from_shelf(place_to["_id"], _id)
+        self.update_order(_id, 'cargo-given')
+        print('Given Cargo Successfully')
+    
+    def RETURN_ACTION_HANDLER(self, _id):
+        place_from, place_to, order = self.get_full_order(_id)
+        print('Start Returning')
+        time.sleep(10)
+        self.get_from_shelf(place_to["_id"], _id)
+        print('Returned Successfully')
 
     def deliver_order(self, _id):
+        # Start when state was 'not-started'
         place_from, place_to, order = self.get_order(_id)
         print(f'Starting Order from {place_from["pos"]} to {place_to["pos"]}')
-        self.put_in_shelf(place_from["_id"], _id)
-        print('Shelf initialized')
         self.delivering = True
         self.update_order(order, "in-progress")
         if self.current_dronepoint != place_from['_id']:
@@ -106,7 +129,7 @@ class DroneHandler(MongoConnection, MavlinkListener):
         self.put_cargo_action()
         self.put_in_shelf(place_to["_id"], _id)
         print('Cargo put')
-        self.update_order(order, "completed")
+        self.update_order(order, "waiting-cargo")
         print('Completed Order')
         self.update_drone(self.mavconn.target_system, {
             "currentDronepoint": place_to["_id"],
@@ -143,9 +166,11 @@ class DroneHandler(MongoConnection, MavlinkListener):
     def listen(self):
         thread_msg = threading.Thread(target=self.receive_messages)
         thread_act = threading.Thread(target=self.receive_actions)
+        thread_st = threading.Thread(target=self.receive_state)
         thread_query = threading.Thread(target=self.execute_query)
         thread_msg.start()
         thread_act.start()
+        thread_st.start()
         thread_query.start()
 
 listener = DroneHandler()

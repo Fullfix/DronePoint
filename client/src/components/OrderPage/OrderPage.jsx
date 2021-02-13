@@ -1,7 +1,7 @@
 import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import { fetchOrder, droneAction, fetchTimeLeft } from '../../utils/api';
+import { fetchOrder, droneAction, fetchTimeLeft, insertCargo, giveCargo, returnCargo } from '../../utils/api';
 import { formattedDistance, formattedTime, getDistanceLeft, getTimeLeft, statusToText, tariffToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
 import LoadingSpinner from '../shared/LoadingSpinner';
@@ -27,6 +27,27 @@ const OrderPage = () => {
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState(null);
     const [timeLeft, setTimeLeft] = useState(null);
+
+    const handleInsert = async () => {
+        const { success, res } = await insertCargo(id);
+        if (success) {
+            setLoading(true);
+        }
+    }
+
+    const handleGive = async () => {
+        const { success, res } = await giveCargo(id);
+        if (success) {
+            setLoading(true);
+        }
+    }
+
+    const handleReturn = async () => {
+        const { success, res } = await returnCargo(id);
+        if (success) {
+            setLoading(true);
+        }
+    }
 
     useEffect(() => {
         const getOrder = async () => {
@@ -61,7 +82,7 @@ const OrderPage = () => {
             label: 'Расстояние',
             value: formattedDistance(order.distance),
         },
-        ...((order.state !== 'completed') ? [{
+        ...((order.state !== 'completed' && order.state !== 'waiting-cargo') ? [{
             label: 'Осталось времени',
             value: formattedTime(timeLeft), 
         }] : []),
@@ -103,6 +124,23 @@ const OrderPage = () => {
                     <Grid item>
                         <Typography variant="h2">{order.price} ₽</Typography>
                     </Grid>
+                </Grid>
+                <Grid item>
+                    {order.state === 'waiting-input' &&
+                    <Button variant="contained" color="primary"
+                    onClick={handleInsert}>
+                        Положить груз
+                    </Button>}
+                    {order.state === 'waiting-cargo' &&
+                    <Button variant="contained" color="primary"
+                    onClick={handleGive}>
+                        Выдать груз
+                    </Button>}
+                    {order.state === 'cargo-given' &&
+                    <Button variant="contained" color="primary"
+                    onClick={handleReturn}>
+                        Взял груз
+                    </Button>}
                 </Grid>
             </Grid>
         </React.Fragment>

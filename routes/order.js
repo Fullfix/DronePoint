@@ -93,6 +93,42 @@ router.get('/gettimeleft/:id', async (req, res, next) => {
     return next();
 });
 
+router.post('/insertcargo/:id', async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+        res.data = { err: 'Invalid Order ID' };
+        return next();
+    }
+    order.state = 'inserting-cargo';
+    await order.save();
+    res.data = order;
+    return next();
+});
+
+router.post('/givecargo/:id', async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+        res.data = { err: 'Invalid Order ID' };
+        return next();
+    }
+    order.state = 'giving-cargo';
+    await order.save();
+    res.data = order;
+    return next();
+});
+
+router.post('/returncargo/:id', async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+        res.data = { err: 'Invalid Order ID' };
+        return next();
+    }
+    order.state = 'completed';
+    await order.save();
+    res.data = order;
+    return next();
+});
+
 router.post('/create/guest', async (req, res, next) => {
     const placeFrom = await DronePoint.findById(req.body.placeFrom);
     const placeTo = await DronePoint.findById(req.body.placeTo);
