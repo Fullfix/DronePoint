@@ -11,6 +11,7 @@ from pymongo import MongoClient
 from pymavlink import mavutil, mavwp
 from pymavlink.mavutil import mavlink
 from mongo import MongoConnection
+from graph import get_path
 import math
 
 
@@ -53,10 +54,125 @@ class MavlinkListener:
     
     def put_cargo_action(self):
         time.sleep(10)
+    
+    def mission_exec(self, dpfrom, destination):
+        print('Initiating Mission')
+        wp.clear()
+        # Takeoff
+        frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            0,
+            mavlink.MAV_FRAME_MISSION,
+            mavlink.MAV_CMD_DO_CHANGE_SPEED,
+            0,
+            1,
+            0, 100, 0, 0,
+            0,
+            0,
+            0,
+        )
+        wp.add(p)
+
+
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            0,
+            frame,
+            mavlink.MAV_CMD_NAV_TAKEOFF,
+            0,
+            1,
+            15, 0, 0, math.nan,
+            self.latest_pos[0],
+            self.latest_pos[1],
+            20,
+        )
+        wp.add(p)
+        path = get_path(dpfrom["name"], destination["name"])[1:]
+        print('PATH')
+        print(dpfrom["name"], destination["name"])
+        print(get_path(dpfrom["name"], destination["name"]))
+        # Waypoint
+        for point in path:
+            p = mavlink.MAVLink_mission_item_message(
+                self.mavconn.target_system,
+                self.mavconn.target_component,
+                1,
+                frame,
+                mavlink.MAV_CMD_NAV_WAYPOINT,
+                0,
+                1,
+                0, 10, 0, math.nan,
+                point[0],
+                point[1],
+                20,
+            )
+            wp.add(p)
+        # Land
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            2,
+            frame,
+            mavlink.MAV_CMD_NAV_LAND,
+            0,
+            1,
+            0, 0, 0, math.nan,
+            path[-1][0],
+            path[-1][1],
+            0,
+        )
+        wp.add(p)
+
+        # Message
+        # self.set_home(self.latest_pos, self.latest_alt)
+        self.set_home(path[-1], self.latest_alt)
+        # msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
+        # print('Received message')
+        # print(msg)
+
+        # Send waypoints
+        self.mavconn.waypoint_clear_all_send()
+        self.mavconn.waypoint_count_send(wp.count())
+
+        for i in range(wp.count()):
+            msg = self.mavconn.recv_match(type=['MISSION_REQUEST'], blocking=True)
+            print(msg)
+            self.mavconn.mav.send(wp.wp(msg.seq))
+            print(f'Sending waypoint {msg.seq}')
+        # msg = self.mavconn.recv_match(type=['MISSION_ACK'])
+        # print('Received mission')
+        # print(msg)
+
+        # Start Mission
+        time.sleep(1)
+        self.mavconn.set_mode_auto()
+        print('Started Mission')
 
     def mission_goto(self, destination):
         print('Initiating Mission')
         wp.clear()
+
+
+        # Speed
+        p = mavlink.MAVLink_mission_item_message(
+            self.mavconn.target_system,
+            self.mavconn.target_component,
+            0,
+            mavlink.MAV_FRAME_MISSION,
+            mavlink.MAV_CMD_DO_CHANGE_SPEED,
+            0,
+            1,
+            0, 100, 0, 0,
+            0,
+            0,
+            0,
+        )
+        wp.add(p)
+
         # Takeoff
         frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
         p = mavlink.MAVLink_mission_item_message(
