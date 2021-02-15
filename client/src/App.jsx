@@ -16,6 +16,9 @@ import { YMInitializer } from 'react-yandex-metrika';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import useWindowSize from './hooks/useWindowSize'
 import { Helmet } from 'react-helmet';
+import Menu from './components/Menu/Menu';
+import Profile from './components/Profile/Profile';
+import About from './components/About';
 
 const theme = createMuiTheme({
   palette: {
@@ -106,6 +109,9 @@ function App() {
                         <Route exact path="/login" component={Login}/>
                         <Route exact path="/register" component={Register} />
                         <ProtectedRoute exact path="/myorders" component={MyOrders} />
+                        <ProtectedRoute exact path="/menu" component={Menu} />
+                        <ProtectedRoute exact path="/profile" component={Profile} />
+                        <ProtectedRoute exact path="/about" component={About} />
                       </Switch>
                     </Box>
                     <BottomMenu />

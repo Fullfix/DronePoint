@@ -83,3 +83,10 @@ export const returnCargo = async (id) => {
         return res;
     })
 }
+
+export const getAllDronepoints = async () => {
+    return errorHandler(async () => {
+        const res = await axios.get(`/api/dronepoint/all`);
+        return res;
+    })
+}

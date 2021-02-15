@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Input, makeStyles, Typography } from '@material-ui/core'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import DroneMap from '../shared/DroneMap';
 import HeaderMenu from '../shared/HeaderMenu';
 import OrderDetails from './OrderDetails';
@@ -8,6 +8,8 @@ import { UserContext } from '../../contexts/UserContext';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import './MakeOrder.css';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
+import { getAllDronepoints } from '../../utils/api';
 
 const useStyles = makeStyles(theme => ({
     box: {
@@ -26,14 +28,30 @@ const MakeOrder = () => {
     const [isOrdering, setIsOrdering] = useState(false);
     const { isAuthenticated, logout } = useContext(UserContext);
     const [distance, setDistance] = useState(null);
+    const [dronePoints, setDronePoints] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [price, setPrice] = useState(null);
     const [tariff, setTariff] = useState(null);
     const [comment, setComment] = useState(null);
+    const placeRef = useRef();
     const classes = useStyles();
     // logout()
 
     useEffect(() => {
+        const fetchDP = async () => {
+            const { success, res } = await getAllDronepoints();
+            setDronePoints(res);
+            setLoading(false);
+        }
+        if (loading) fetchDP();
+    })
+
+    useEffect(() => {
         const makeOrder = async () => {
+            if (!placeTo && !placeFrom) {
+                toast.warn('Выберите Дронпоинты для доставки');
+                return setIsOrdering(false);
+            }
             try {
                 const res = await axios.post(`/api/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
                     placeFrom: placeFrom._id,
@@ -54,13 +72,15 @@ const MakeOrder = () => {
         if (isOrdering) makeOrder();
     }, [isOrdering, placeFrom, placeTo, distance, price]);
 
-    if (isOrdering) return (
+    if (isOrdering || loading) return (
         <LoadingSpinner height="100vh"/>
     )
 
     return (
         <React.Fragment>
             <DroneMap open={mapOpen} onClose={() => setMapOpen(false)}
+            dronePoints={dronePoints} loading={loading}
+            placeFrom={placeFrom}
             onSelect={(point, type) => {
                 if (type === 'from') {
                     setPlaceFrom(point);
@@ -74,7 +94,7 @@ const MakeOrder = () => {
             width="100wv">
                 <Grid container alignItems="center" direction="column"
                 spacing={3}>
-                    <Grid item className={clsx(classes.box)}>
+                    <Grid item className={clsx(classes.box)} id="placeBox">
                         <Box width="100%">
                             <Typography variant="h3">Маршрут</Typography>
                             <Button variant="text" fullWidth 
@@ -88,7 +108,7 @@ const MakeOrder = () => {
                                 {placeFrom?.name || 'Откуда'}
                             </Button>
                             <Button variant="text" fullWidth
-                            disabled={!!order} 
+                            disabled={!!order}
                             onClick={e => setMapOpen('to')}
                             style={{
                                 border: '1px solid black',

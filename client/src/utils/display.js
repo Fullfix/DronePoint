@@ -11,7 +11,7 @@ export const statusToText = {
     "not-started": { text: "Ожидает начала доставки", color: "#365EE7" },
     "taking-cargo": { text: "Забирает груз в Дрон", color: "#696969" },
     "putting-cargo": { text: "Извлекает груз из Дрона", color: "#696969" },
-    "in-progress": { text: "Доставляет", color: "#696969" },
+    "in-progress": { text: "Доставляется", color: "#696969" },
     "waiting-cargo": { text: 'Ожидает выдачи', color: '#365EE7' },
     "giving-cargo": { text: 'Выдаёт груз', color: '#365EE7' },
     "cargo-given": { text: 'Ожидает возврата контейнера', color: '#365EE7' },

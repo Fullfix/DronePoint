@@ -22,7 +22,7 @@ router.post('/login', passport.authenticate('local-login'), (req, res, next) => 
 });
 
 router.post('/signup', (req, res, next) => {
-    passport.authenticate('local-signup', (err, user, info) => {
+    passport.authenticate('local-signup', async (err, user, info) => {
         if (err) {
             res.data = { err };
         }
@@ -30,8 +30,11 @@ router.post('/signup', (req, res, next) => {
             res.data = { err: info.message };
         }
         else {
+            const userObj = await User.findById(user._id);
+            userObj.icon = Math.floor(Math.random() * 20) + 1;
+            const newUser = await userObj.save();
             res.data = {
-                user: user,
+                user: newUser,
                 message: info.message
             };
         };
@@ -41,10 +44,7 @@ router.post('/signup', (req, res, next) => {
 
 // example
 router.get('/me', passport.authenticate('jwt'), async (req, res, next) => {
-    const user = await User.findById(req.user._id);
-    user.icon = Math.floor(Math.random() * 20) + 1;
-    const newUser = await user.save();
-    res.data = { user: newUser };
+    res.data = { user: req.user };
     return next();
 });
 

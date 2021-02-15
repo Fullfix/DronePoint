@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary,
-   Box, Button, Checkbox, Container, Grid, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
+   Box, Button, Checkbox, Container, Grid, IconButton, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { formattedDistance, formattedTime, calcCrow, droneVelocity } from '../../utils/display';
@@ -30,6 +30,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
   const classes = useStyles();
   const [tariff, setTariff] = useState(80);
   const [comment, setComment] = useState('');
+  const [acc, setAcc] = useState(null);
   const placed = !!(placeTo && placeFrom);
 
   const distance = placed && calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
@@ -84,12 +85,12 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
             {tariffes.map(tarif => 
             <Grid item>
               <Accordion className={classes.accordion} 
-              expanded={tariff === tarif.value}
-              onChange={() => setTariff(tarif.value)}>
+              expanded={acc === tarif.value}>
                 <AccordionSummary>
                   <Grid container justify="space-between" alignItems="center">
                     <Grid item>
-                      <Typography variant="h4" component="span">
+                      <Typography variant="h4" component="span"
+                      onClick={() => setTariff(tarif.value)}>
                         <Radio color="primary" className={classes.radio}
                         checked={tariff === tarif.value}
                         onChange={() => setTariff(tarif.value)}/>
@@ -97,7 +98,16 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Info />
+                      <IconButton onClick={(e) => {
+                        e.preventDefault();
+                        if (acc === tarif.value) {
+                          setAcc(null);
+                        } else {
+                          setAcc(tarif.value);
+                        }
+                      }}>
+                        <Info color="action"/>
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </AccordionSummary>
@@ -121,7 +131,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
           </Grid>
           <Grid item>
             <Typography variant="h2">
-              {placed ? parseInt(distance * tariff) : '-'} ₽
+              {placed ? parseInt(distance * tariff) : '0'} ₽
             </Typography>
           </Grid>
         </Grid>

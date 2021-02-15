@@ -21,9 +21,18 @@ const useStyles = makeStyles(theme => ({
             height: '56px',
         }
     },
+    text: {
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '16px',
+        },
+    },
     img: {
         height: '100%',
         marginRight: '20px',
+        cursor: 'pointer',
+        [theme.breakpoints.down('xs')]: {
+            marginRight: '10px',
+        }
     },
     user: {
         height: '55px',
@@ -51,13 +60,19 @@ const HeaderMenu = ({ text }) => {
         history.push('/login');
     }
 
+    const handleLogo = () => {
+        history.push('/makeorder');
+    }
+
     return (
         <React.Fragment>
             <AppBar className={classes.appbar}>
                 <Toolbar>
                     <Box display="flex" className={classes.root} alignItems="center">
-                        <img src={"/favicon.svg"} className={classes.img}/>
-                        <Typography variant="h2">{text}</Typography>
+                        <img src={"/favicon.svg"} className={classes.img}
+                        onClick={handleLogo}/>
+                        <Typography variant="h2"
+                        className={classes.text}>{text}</Typography>
                         {isAuthenticated && <React.Fragment>
                             <IconButton className={classes.user}
                             aria-controls="user-menu"

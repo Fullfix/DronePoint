@@ -3,7 +3,7 @@ const passport = require('passport');
 const Drone = require('../models/Drone');
 const DronePoint = require('../models/DronePoint');
 const Order = require('../models/Order');
-const { getOrderQueue, getTimeLeft } = require('../services/order');
+const { getOrderQueue, getTimeLeft, calcCrow } = require('../services/order');
 require('dotenv/config');
 
 const router = express.Router();
@@ -54,6 +54,10 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
     }
     if (!req.body.tariff) {
         res.data = { err: "Tariff missing" };
+        return next();
+    }
+    if (calcCrow(placeFrom.pos, placeTo.pos) >= 6) {
+        res.data = { err: 'Too long distance' };
         return next();
     }
     const drone = await Drone.findOne();
@@ -150,6 +154,10 @@ router.post('/create/guest', async (req, res, next) => {
     }
     if (!req.body.tariff) {
         res.data = { err: "Tariff missing" };
+        return next();
+    }
+    if (calcCrow(placeFrom.pos, placeTo.pos) >= 6) {
+        res.data = { err: 'Too long distance' };
         return next();
     }
     const drone = await Drone.findOne();

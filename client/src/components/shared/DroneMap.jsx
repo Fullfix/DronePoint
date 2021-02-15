@@ -5,6 +5,7 @@ import { AppBar, Box, Dialog, IconButton, List, ListItem,
 import { Close as CloseIcon, LocationOn } from '@material-ui/icons';
 import axios from 'axios';
 import LoadingSpinner from './LoadingSpinner';
+import { calcCrow } from '../../utils/display';
 
 const useStyles = makeStyles(theme => ({
     mainGrid: {
@@ -32,21 +33,15 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DroneMap = ({ open, onClose, onSelect }) => {
+const DroneMap = ({ open, onClose, onSelect, dronePoints, loading, placeFrom }) => {
     const classes = useStyles();
-    const [dronePoints, setDronePoints] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [selectedPoint, setSelectedPoint] = useState(null);
     const [coords, setCoords] = useState([54.3, 48.36]);
 
-    useEffect(() => {
-        const fetchDronePoints = async () => {
-            const res = await axios.get(`/api/dronepoint/all`);
-            setDronePoints(res.data.response);
-            setLoading(false);
-        }
-        if (loading) fetchDronePoints();
-    }, [loading])
+    const dronepoints = open === 'to' ? dronePoints.filter(dronepoint => {
+        if (dronepoint._id === placeFrom._id) return false;
+        return calcCrow(placeFrom.pos, dronepoint.pos) < 6;
+    }) : dronePoints;
 
     return (
         <Dialog fullScreen open={!!open} onClose={onClose}
@@ -60,7 +55,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h2">
-                        Выберите Дрон поинт ({ open === 'from' ? 'откуда' : 'куда'})
+                        Выберите Дронпоинт ({ open === 'from' ? 'откуда' : 'куда'})
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -70,7 +65,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                     <Map state={{ center: coords, zoom: 12 }}
                     className="yandex-map"
                     width="100%" height="60vh">
-                        {dronePoints.map(point => 
+                        {dronepoints.map(point => 
                         <Placemark key={point.name} geometry={point.pos}
                         onClick={() => {
                             setSelectedPoint(p => p === point.name ? null : point.name);
@@ -81,7 +76,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List component="nav" className={classes.list}>
-                        {dronePoints.map(point => 
+                        {dronepoints.map(point => 
                         <ListItem button selected={point.name === selectedPoint}
                         key={point.name}
                         onClick={() => {
@@ -101,7 +96,7 @@ const DroneMap = ({ open, onClose, onSelect }) => {
             <Button fullWidth variant="contained" color="primary"
             disabled={!selectedPoint}
             onClick={() => {
-                const point = dronePoints.find(p => p.name === selectedPoint);
+                const point = dronepoints.find(p => p.name === selectedPoint);
                 onSelect(point, open);
                 onClose();
                 setSelectedPoint(null);
