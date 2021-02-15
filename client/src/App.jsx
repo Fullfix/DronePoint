@@ -83,6 +83,7 @@ function App() {
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta name="theme-color" content={theme.palette.primary.main} />
+            <meta name="yandex-verification" content="01444705e57ff800" />
             <meta
               name="description"
               content="Приложение для доставки дронами"
