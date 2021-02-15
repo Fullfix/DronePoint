@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
+const https = require('https');
 
 const auth = require('./routes/auth');
 const order = require('./routes/order');
@@ -22,6 +23,10 @@ require('dotenv/config');
 
 const app = express();
 const port = process.env.PORT || 2000;
+const credentials = {
+    key: process.env.PRIVATE_KEY_HTTPS,
+    cert: process.env.CERTIFICATE_HTTPS,
+}
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -75,7 +80,13 @@ app.get('*', (req, res) => {
     return res.sendFile(path.join(__dirname, 'client/build/index.html'));  
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const httpsServer = https.createServer(app, credentials);
+
+if (process.env.PROD) {
+    httpsServer.listen(80);
+} else {
+    app.listen(port, () => console.log(`Listening on port ${port}`));
+}
 
 mongoose.connect(
     process.env.DB_CONNECTION,
