@@ -24,10 +24,6 @@ require('dotenv/config');
 
 const app = express();
 const port = process.env.PORT || 2000;
-const credentials = {
-    key: fs.readFileSync('server.key', 'utf8'),
-    cert: fs.readFileSync('server.crt', 'utf8'),
-}
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -81,10 +77,13 @@ app.get('*', (req, res) => {
     return res.sendFile(path.join(__dirname, 'client/build/index.html'));  
 });
 
-const httpsServer = https.createServer(app, credentials);
-
 if (process.env.PROD) {
-    httpsServer.listen(80);
+    const credentials = {
+        key: fs.readFileSync('server.key', 'utf8'),
+        vert: fs.readFileSync('server.crt', 'utf8'),
+    }
+    const httpsServer = https.createServer(credentials, app);
+    httpsServer.listen(443);
 } else {
     app.listen(port, () => console.log(`Listening on port ${port}`));
 }
