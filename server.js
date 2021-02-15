@@ -10,6 +10,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
 const https = require('https');
+const fs = require('fs');
 
 const auth = require('./routes/auth');
 const order = require('./routes/order');
@@ -24,8 +25,8 @@ require('dotenv/config');
 const app = express();
 const port = process.env.PORT || 2000;
 const credentials = {
-    key: process.env.PRIVATE_KEY_HTTPS,
-    cert: process.env.CERTIFICATE_HTTPS,
+    key: fs.readFileSync('server.key', 'utf8'),
+    cert: fs.readFileSync('server.crt', 'utf8'),
 }
 
 app.use(morgan('dev'));
