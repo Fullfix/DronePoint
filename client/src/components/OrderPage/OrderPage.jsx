@@ -1,5 +1,5 @@
 import { Box, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { fetchOrder, droneAction, fetchTimeLeft, insertCargo, giveCargo, returnCargo } from '../../utils/api';
 import { formattedDistance, formattedTime, getDistanceLeft, getTimeLeft, statusToText, tariffToText } from '../../utils/display';
@@ -27,6 +27,7 @@ const OrderPage = () => {
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState(null);
     const [timeLeft, setTimeLeft] = useState(null);
+    const interval = useRef()
 
     const handleInsert = async () => {
         const { success, res } = await insertCargo(id);
@@ -48,6 +49,13 @@ const OrderPage = () => {
             setLoading(true);
         }
     }
+
+    useEffect(() => {
+        interval.current = setInterval(() => {
+            setLoading(true);
+        }, 30000);
+        return () => clearInterval(interval.current);
+    }, []);
 
     useEffect(() => {
         const getOrder = async () => {
