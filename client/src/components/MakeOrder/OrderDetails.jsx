@@ -3,6 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary,
 import { Info } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { formattedDistance, formattedTime, calcCrow, droneVelocity } from '../../utils/display';
+import Payment from '../Payment';
 
 const useStyles = makeStyles(theme => ({
   info: {

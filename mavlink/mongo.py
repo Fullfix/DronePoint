@@ -13,6 +13,9 @@ class MongoConnection:
         self.db = client[self.mongo_db]
         print('CONNECTED TO DB')
     
+    def get_dronepoint(self, _id):
+        return self.db.dronepoints.find_one({ "_id": _id })
+    
     def get_full_order(self, _id):
         order = self.db.orders.find_one({ "_id": _id })
         place_from = self.db.dronepoints.find_one({ "_id": order["placeFrom"] })
@@ -76,9 +79,11 @@ class MongoConnection:
         return self.db.drones.find_one()['currentDronepoint']
     
     def receive_actions(self):
-        while True:
-            stream = self.db.drones.watch(self.pipeline)
-            for update_change in stream:
+        with self.db.drones.watch(self.pipeline) as stream:
+            while stream.alive:
+                update_change = stream.try_next()
+                if update_change is None:
+                    continue
                 # Check if action was updated
                 info = update_change['updateDescription']['updatedFields']
                 if 'ordersQuery' in info.keys():
@@ -92,11 +97,12 @@ class MongoConnection:
                     self.current_dronepoint = info['currentDronepoint']
 
     def receive_state(self):
-        print('Start watching states')
-        while True:
-            print('Watching changes')
-            stream = self.db.orders.watch(self.pipeline)
-            for update_change in stream:
+        print('Start Watching states')
+        with self.db.orders.watch(self.pipeline) as stream:
+            while stream.alive:
+                update_change = stream.try_next()
+                if update_change is None:
+                    continue
                 info = update_change['updateDescription']['updatedFields']
                 if 'state' in info.keys():
                     if info['state'] == 'inserting-cargo':

@@ -20,6 +20,7 @@ import Menu from './components/Menu/Menu';
 import Profile from './components/Profile/Profile';
 import About from './components/About';
 import VerifyEmail from './components/VerifyEmail/VerifyEmail';
+import Payment from './components/Payment';
 
 const theme = createMuiTheme({
   palette: {

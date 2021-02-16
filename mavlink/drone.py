@@ -104,7 +104,11 @@ class DroneHandler(MongoConnection, MavlinkListener):
         self.delivering = True
         self.update_order(order, "in-progress")
         if self.current_dronepoint != place_from['_id']:
-            self.mission_goto(place_from["pos"])
+            if not self.current_dronepoint:
+                self.mission_goto(place_from["pos"])
+            else:
+                curr = self.get_dronepoint(self.current_dronepoint)
+                self.mission_exec(curr, place_from)
         time.sleep(5)
         while True:
             print(f'Check Armed: {self.armed}')
