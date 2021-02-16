@@ -65,6 +65,9 @@ const DroneMap = ({ open, onClose, onSelect, dronePoints, loading, placeFrom }) 
                     <Map state={{ center: coords, zoom: 12 }}
                     className="yandex-map"
                     width="100%" height="60vh">
+                        {open === 'to' && 
+                        <Placemark geometry={placeFrom.pos}
+                        options={{ iconColor: 'green' }} />}
                         {dronepoints.map(point => 
                         <Placemark key={point.name} geometry={point.pos}
                         onClick={() => {

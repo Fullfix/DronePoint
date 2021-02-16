@@ -22,7 +22,13 @@ wp = mavwp.MAVWPLoader()
 class MavlinkListener:
     def __init__(self):
         self.url = os.environ.get('MAVLINK_ENDPOINT', 'udpin:0.0.0.0:14540')
+        self.url2 = 'udpin:192.168.194.170:14590'
         self.mavconn = mavutil.mavlink_connection(self.url, source_system=255)
+        try:
+            self.mavconn2 = mavutil.mavlink_connection(self.url2, source_system=255)
+        except BaseException as e:
+            self.mavconn2 = False
+            print(e)
         print('Mavlink initialized. Waiting for connection')
         self.mavconn.wait_heartbeat()
         print('Connected to Mavlink')
@@ -57,8 +63,13 @@ class MavlinkListener:
             altitude)
     
     def dronepoint_action(self, mode):
+        if self.mavconn2:
+            mavconn = self.mavconn2
+            print('New Connection')
+        else:
+            mavconn = self.mavconn
         try:
-            self.mavconn.mav.command_long_send(
+            mavconn.mav.command_long_send(
                 self.mavconn.target_system, 
                 self.mavconn.target_component, 
                 mavlink.MAV_CMD_DO_SET_MODE, 
@@ -293,3 +304,8 @@ class MavlinkListener:
             
     def handle_message(self, msg):
         pass
+
+
+listener = MavlinkListener()
+
+listener.get_cargo_action()

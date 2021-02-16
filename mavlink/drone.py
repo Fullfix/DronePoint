@@ -77,7 +77,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
         
         place_from, place_to, order = self.get_full_order(_id)
         print('Start Inserting')
-        time.sleep(10)
+        # DP Action
+        self.get_cargo_action()
+        ###
         self.put_in_shelf(place_from["_id"], _id)
         self.update_order(_id, 'not-started')
         print('Inserted Cargo Successfully')
@@ -85,6 +87,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
     def GIVE_ACTION_HANDLER(self, _id):
         place_from, place_to, order = self.get_full_order(_id)
         print('Start Giving')
+        # DP Action
+        self.give_cargo_action()
+        ###
         time.sleep(10)
         self.get_from_shelf(place_to["_id"], _id)
         self.update_order(_id, 'cargo-given')
@@ -93,6 +98,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
     def RETURN_ACTION_HANDLER(self, _id):
         place_from, place_to, order = self.get_full_order(_id)
         print('Start Returning')
+        # DP Action
+        self.get_cargo_action()
+        ###
         time.sleep(10)
         self.get_from_shelf(place_to["_id"], _id)
         print('Returned Successfully')

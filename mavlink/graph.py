@@ -59,6 +59,6 @@ def get_points():
 def distance(pos1, pos2):
     return mpu.haversine_distance(pos1, pos2)
 
-get_lengths()
+# get_lengths()
 # print(get_path([54.333, 48.3945],
 #         [54.31777, 48.39601]))

@@ -47,11 +47,11 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order, distance, time }) =
     },
     {
       label: 'Расстояние',
-      value: placed ? formattedDistance(distance) : '-',
+      value: placed && distance ? formattedDistance(distance) : '-',
     },
     {
       label: 'Время в полёте',
-      value: placed ? formattedTime(time) : '-',
+      value: placed && time ? formattedTime(time) : '-',
     },
   ]
   const tariffes = [
@@ -163,7 +163,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order, distance, time }) =
             <Grid container justify="center">
               <Grid item>
                 <Button href={`/order/${order._id}`} variant={'contained'}
-                color="primary">
+                color="primary" id="order-find-btn">
                   Перейти к отслеживанию
                 </Button>
               </Grid>

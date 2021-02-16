@@ -47,9 +47,6 @@ const BottomMenu = () => {
             <BottomNavigationAction label="Меню" className={classes.button}
             classes={btnClasses}
             icon={<Menu />} value="menu"/>
-            <BottomNavigationAction label="Калькулятор" className={classes.button}
-            classes={btnClasses}
-            icon={<Functions />} value="calc"/>
         </BottomNavigation>
     )
 }

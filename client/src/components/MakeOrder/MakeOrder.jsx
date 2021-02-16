@@ -87,6 +87,18 @@ const MakeOrder = () => {
         if (isOrdering) makeOrder();
     }, [isOrdering, placeFrom, placeTo, distance, price]);
 
+    useEffect(() => {
+        if (order) {
+            const interval = setInterval(() => {
+                const obj = document.querySelector('#order-find-btn');
+                if (obj) {
+                    obj.scrollIntoView();
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+    }, [order]);
+
     if (isOrdering || loading) return (
         <LoadingSpinner height="100vh"/>
     )
@@ -99,6 +111,7 @@ const MakeOrder = () => {
             onSelect={(point, type) => {
                 if (type === 'from') {
                     setPlaceFrom(point);
+                    setPlaceTo(null);
                 } else {
                     setPlaceTo(point);
                 }
@@ -123,7 +136,7 @@ const MakeOrder = () => {
                                 {placeFrom?.name || 'Откуда'}
                             </Button>
                             <Button variant="text" fullWidth
-                            disabled={!!order}
+                            disabled={!!order || !placeFrom}
                             onClick={e => setMapOpen('to')}
                             style={{
                                 border: '1px solid black',
