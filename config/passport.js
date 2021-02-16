@@ -40,6 +40,8 @@ passport.use('local-login', new LocalStrategy({
         let user = await User.findOne({ email }).exec();
         if (!user)
             return done(null, false, { message: 'Incorrect username' });
+        if (!user.active)
+            return done(null, false, { message: 'Аккаунт не верифицирован' });
         if (!user.validPassword(password))
             return done(null, false, { message: 'Incorrect password' });
         return done(null, user, { message: 'Logged in successfully' });

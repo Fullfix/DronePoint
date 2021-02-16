@@ -94,6 +94,7 @@ class MongoConnection:
     def receive_state(self):
         print('Start watching states')
         while True:
+            print('Watching changes')
             stream = self.db.orders.watch(self.pipeline)
             for update_change in stream:
                 info = update_change['updateDescription']['updatedFields']

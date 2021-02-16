@@ -90,3 +90,10 @@ export const getAllDronepoints = async () => {
         return res;
     })
 }
+
+export const verifyEmail = async ({ id, code }) => {
+    return errorHandler(async () => {
+        const res = await axios.post(`/api/auth/verify-email/${id}/${code}`);
+        return res;
+    })
+}

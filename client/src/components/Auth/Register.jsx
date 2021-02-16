@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles, TextField } from '@material-ui/core'
+import { Button, Grid, makeStyles, TextField, Typography } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { useHistory } from 'react-router-dom'
@@ -17,6 +17,11 @@ const useStyles = makeStyles(theme => ({
         color: "gray"
       },
     },
+    message: {
+        color: 'green',
+        marginTop: '20px',
+        padding: '10px',
+    }
 }))
 
 const Register = () => {
@@ -28,6 +33,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const registerAction = async () => {
         // const token = await executeRecaptcha('register');
@@ -47,18 +53,27 @@ const Register = () => {
             }
             const success = await register({ username, password });
             if (success) {
-                reload();
-                return history.push('/');
+                setSuccess(true);
             }
             setSubmitting(false);
         }
         if (submitting) submit();
     }, [submitting]);
 
+    if (success) return (
+        <React.Fragment>
+            <HeaderMenu text={'Регистрация'} />
+            <Typography variant="h3" className={classes.message}>
+                Аккаунт успешно зарегистрирован! Мы отправили вам
+                ссылку на подтверждение {username}
+            </Typography>
+        </React.Fragment>
+    )
+
     return (
         <React.Fragment>
             <HeaderMenu text={'Регистрация'}/>
-            <GoogleReCaptcha />
+            {/* <GoogleReCaptcha /> */}
             <Grid container spacing={2} direction="column" alignItems="center"
             className={classes.container}>
                 <Grid item>

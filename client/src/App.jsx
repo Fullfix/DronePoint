@@ -19,6 +19,7 @@ import { Helmet } from 'react-helmet';
 import Menu from './components/Menu/Menu';
 import Profile from './components/Profile/Profile';
 import About from './components/About';
+import VerifyEmail from './components/VerifyEmail/VerifyEmail';
 
 const theme = createMuiTheme({
   palette: {
@@ -109,6 +110,7 @@ function App() {
                         <Route exact path="/order/:id" component={OrderPage} />
                         <Route exact path="/login" component={Login}/>
                         <Route exact path="/register" component={Register} />
+                        <Route exact path="/verify-email/:id/:code" component={VerifyEmail} />
                         <ProtectedRoute exact path="/myorders" component={MyOrders} />
                         <ProtectedRoute exact path="/menu" component={Menu} />
                         <ProtectedRoute exact path="/profile" component={Profile} />

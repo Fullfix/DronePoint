@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const uuid = require('uuid');
 
 const userSchema = mongoose.Schema({
     email: {
@@ -17,6 +18,14 @@ const userSchema = mongoose.Schema({
         type: Number,
         required: [true, 'cannot be blank'],
         default: 1,
+    },
+    active: {
+        type: Boolean,
+        default: false,
+    },
+    verificationString: {
+        type: String,
+        default: uuid.v4(),
     },
 });
 

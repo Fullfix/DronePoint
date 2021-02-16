@@ -49,12 +49,6 @@ const UserProvider = ({ children }) => {
                 password
             });
             toast.success('Аккаунт зарегестрирован');
-            const res = await axios.post('/api/auth/login', {
-                email: username,
-                password,
-            });
-            localStorage.setItem('token', res.data.response.token);
-            setUser(res.data.response.user);
             return true;
         } catch (err) {
             console.log(err);
