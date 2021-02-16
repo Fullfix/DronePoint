@@ -97,3 +97,12 @@ export const verifyEmail = async ({ id, code }) => {
         return res;
     })
 }
+
+export const getApproxTimeLeft = async (placeFrom, placeTo) => {
+    return errorHandler(async () => {
+        const res = await axios.post('/api/order/gettimeleft', {
+            placeFrom, placeTo,
+        });
+        return res;
+    })
+} 

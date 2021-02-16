@@ -12,6 +12,15 @@ name_to_point = {
     "ТЦ Заря": 22,
 }
 
+def get_lengths():
+    A = {}
+    for name in name_to_point.keys():
+        A[name] = {}
+        for name2 in name_to_point.keys():
+            if name != name2:
+                A[name][name2] = get_path_l(name, name2)
+    print(A)
+
 def find_path(adjacency_matrix, source_node_index, target_node_index):
     matrix = numpy.matrix(adjacency_matrix)
     graph = nx.from_numpy_matrix(matrix)
@@ -28,6 +37,14 @@ def get_path(pos1, pos2):
     print(path)
     return list(map(lambda x: points[x], path))
 
+def get_path_l(pos1, pos2):
+    graph, points = get_points()
+    points = points['pos']
+    i1 = name_to_point[pos1]
+    i2 = name_to_point[pos2]
+    path, l = find_path(graph, i1, i2)
+    return l
+
 def get_points():
     with open ('mavlink/graph.json', 'r') as f:
         graph = json.load(f)
@@ -42,5 +59,6 @@ def get_points():
 def distance(pos1, pos2):
     return mpu.haversine_distance(pos1, pos2)
 
+get_lengths()
 # print(get_path([54.333, 48.3945],
 #         [54.31777, 48.39601]))

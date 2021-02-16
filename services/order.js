@@ -20,6 +20,8 @@ exports.calcCrow = ([lat1, lon1], [lat2, lon2]) => {
 
 const droneVelocity = 5;
 
+exports.droneVelocity = 5;
+
 exports.getDistanceLeft = (pos, p1, p2, cargoTaken) => {
     let dist;
     if (cargoTaken) {

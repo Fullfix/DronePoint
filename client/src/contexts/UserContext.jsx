@@ -19,7 +19,7 @@ const UserProvider = ({ children }) => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
     const logout = () => {
-        localStorage.removeItem('Authorization');
+        localStorage.removeItem('token');
         setUser(null);
     }
 

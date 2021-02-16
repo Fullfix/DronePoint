@@ -25,11 +25,11 @@ export const tariffToText = {
 }
 
 export const formattedDistance = (dist) => {
-    const num = parseInt(dist)
+    const num = parseInt(dist * 1000)
     if (num >= 1) {
-        return `${num} км`;
-    }
-    return `${parseInt(dist * 1000)} м`;
+        return `${Math.floor(num / 1000)} км ${num % 1000} м`;
+    } 
+    return `${num} м`;
 }
 
 export const formattedDate = (datestring) => {

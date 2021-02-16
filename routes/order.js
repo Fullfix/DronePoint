@@ -3,7 +3,8 @@ const passport = require('passport');
 const Drone = require('../models/Drone');
 const DronePoint = require('../models/DronePoint');
 const Order = require('../models/Order');
-const { getOrderQueue, getTimeLeft, calcCrow } = require('../services/order');
+const { getOrderQueue, getTimeLeft, calcCrow, droneVelocity } = require('../services/order');
+const jsonDist = require('../distances.json');
 require('dotenv/config');
 
 const router = express.Router();
@@ -75,6 +76,19 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
     res.data = newOrder;
     return next();
 });
+
+router.post('/gettimeleft', async (req, res, next) => {
+    const drone = await Drone.findOne();
+    const placeFrom = await DronePoint.findById(req.body.placeFrom);
+    const placeTo = await DronePoint.findById(req.body.placeTo);
+    const placeCur = await DronePoint.findById(drone.currentDronepoint);
+    const dist = jsonDist[placeFrom.name][placeTo.name];
+    res.data = {
+        distance: dist,
+        time: dist * 1000 / droneVelocity,
+    }
+    return next();
+})
 
 router.get('/gettimeleft/:id', async (req, res, next) => {
     const order = await Order.findById(req.params.id).populate('drone')

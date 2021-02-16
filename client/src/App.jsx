@@ -96,9 +96,9 @@ function App() {
             <link rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
             </Helmet>
-            <Box bgcolor="#E5E5E5">
-              <Container maxWidth="sm" style={{ padding: 0 }}>
-                <Box bgcolor="white" height="100vh">
+            <Box bgcolor="#E5E5E5" style={{ overflow: 'hidden' }}>
+              <Container maxWidth="sm" style={{ padding: 0, overflow: 'hidden' }}>
+                <Box bgcolor="white" height="100vh" style={{ overflow: 'hidden' }}>
                   <Router>
                     <Box className={classes.box} style={{
                       height: size.height - 56,

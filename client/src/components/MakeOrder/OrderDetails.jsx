@@ -1,9 +1,9 @@
 import { Accordion, AccordionDetails, AccordionSummary,
    Box, Button, Checkbox, Container, Grid, IconButton, Link, makeStyles, Paper, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import { formattedDistance, formattedTime, calcCrow, droneVelocity } from '../../utils/display';
-import Payment from '../Payment';
 
 const useStyles = makeStyles(theme => ({
   info: {
@@ -27,14 +27,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
+const OrderDetails = ({ placeTo, placeFrom, onSubmit, order, distance, time }) => {
   const classes = useStyles();
   const [tariff, setTariff] = useState(80);
   const [comment, setComment] = useState('');
   const [acc, setAcc] = useState(null);
+  const { isAuthenticated } = useContext(UserContext);
   const placed = !!(placeTo && placeFrom);
 
-  const distance = placed && calcCrow(placeFrom.pos, placeTo.pos).toFixed(2);
   console.log(tariff);
   const info = [
     {
@@ -50,17 +50,17 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
       value: placed ? formattedDistance(distance) : '-',
     },
     {
-      label: 'Время доставки',
-      value: placed ? formattedTime(distance * 1000 / droneVelocity) : '-',
+      label: 'Время в полёте',
+      value: placed ? formattedTime(time) : '-',
     },
   ]
   const tariffes = [
     { label: 'Стандартный', value: 80, desc: 'Разовая пересылка от одного дронпоинта к другому.' },
     { label: 'Приоритетный', value: 130, 
       desc: 'Разовая пересылка от одного дронпоинта к другому, однако Ваш заказ будет доставлен раньше остальных.' },
-    { label: 'По подписке', value: 69,
+    ...(isAuthenticated ? [{ label: 'По подписке', value: 69,
       desc: 'Выгодное решение для компаний, занимающимися частыми пересылками. Экономия составит 10%, а подписку можно оформить на разное количество отправок, в зависимости от ваших потребностей.' 
-    },
+    }] : []),
   ]
 
   return (
@@ -95,7 +95,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                         <Radio color="primary" className={classes.radio}
                         checked={tariff === tarif.value}
                         onChange={() => setTariff(tarif.value)}/>
-                        {tarif.label} ({tarif.value} ₽/км)
+                        {tarif.label}
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -114,7 +114,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography variant="h5">
-                    {tarif.desc}
+                    ({tarif.value} ₽/км) {tarif.desc}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -142,7 +142,7 @@ const OrderDetails = ({ placeTo, placeFrom, onSubmit, order }) => {
           <Button variant="contained" color="primary" fullWidth style={{
             textTransform: 'none',
           }} onClick={() => onSubmit(
-            distance, parseInt(distance * tariff), tariff, comment)}>
+            parseInt(distance * tariff), tariff, comment)}>
             <Typography variant="h3">Заказать</Typography>
           </Button>
         </Box>}

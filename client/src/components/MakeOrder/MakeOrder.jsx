@@ -9,7 +9,7 @@ import LoadingSpinner from '../shared/LoadingSpinner';
 import './MakeOrder.css';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
-import { getAllDronepoints } from '../../utils/api';
+import { getAllDronepoints, getApproxTimeLeft } from '../../utils/api';
 
 const useStyles = makeStyles(theme => ({
     box: {
@@ -33,9 +33,24 @@ const MakeOrder = () => {
     const [price, setPrice] = useState(null);
     const [tariff, setTariff] = useState(null);
     const [comment, setComment] = useState(null);
+    const [time, setTime] = useState(null);
     const placeRef = useRef();
     const classes = useStyles();
     // logout()
+
+    useEffect(() => {
+        const fetchTime = async () => {
+            if (!placeFrom || !placeTo) {
+                setTime(null);
+                setDistance(null);
+                return;
+            }
+            const { success, res } = await getApproxTimeLeft(placeFrom._id, placeTo._id);
+            setTime(res.time);
+            setDistance(res.distance);
+        }
+        fetchTime();
+    }, [placeFrom, placeTo]);
 
     useEffect(() => {
         const fetchDP = async () => {
@@ -120,9 +135,8 @@ const MakeOrder = () => {
                         </Box>
                     </Grid>
                     <OrderDetails placeFrom={placeFrom} placeTo={placeTo}
-                    order={order} 
-                    onSubmit={(d, pr, tf, cm) => {
-                        setDistance(d);
+                    order={order} distance={distance} time={time}
+                    onSubmit={(pr, tf, cm) => {
                         setPrice(pr);
                         setIsOrdering(true);
                         setTariff(tf);
