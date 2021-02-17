@@ -3,16 +3,18 @@ const nodemailer = require('nodemailer');
 
 exports.sendMail = async (user) => {
     const account = nodemailer.createTransport({
-        service: 'Gmail',
+        host: 'smtp.mail.ru',
+        port: '465',
         auth: {
-            user: 'breskanunikita@gmail.com',
-            pass: 'govnopoints2020',
+            user: 'delidrone@mail.ru',
+            pass: 'govnopoints2021',
         },
+        secure: true,
         debug: true,
         logger: true,
     });
     const mailOptions = {
-        from: 'breskanunikita@gmail.com',
+        from: 'delidrone@mail.ru',
         to: user.email,
         subject: 'Верифицируйте свой Email в Delidrone',
         text: `https://delidrone.ru/verify-email/${user._id}/${user.verificationString}`,
