@@ -100,7 +100,7 @@ class MavlinkListener:
             mavlink.MAV_CMD_DO_CHANGE_SPEED,
             0,
             1,
-            0, 100, 0, 0,
+            0, 30, 0, 0,
             0,
             0,
             0,

@@ -60,6 +60,10 @@ const HeaderMenu = ({ text }) => {
         history.push('/login');
     }
 
+    const handleProfile = () => {
+        history.push('/profile');
+    }
+
     const handleLogo = () => {
         history.push('/makeorder');
     }
@@ -85,11 +89,17 @@ const HeaderMenu = ({ text }) => {
                             anchorEl={anchorEl}
                             open={!!anchorEl}
                             onClose={() => setAnchorEl(null)}>
-                                <MenuItem>Профиль</MenuItem>
+                                <MenuItem onClick={handleProfile}>Профиль</MenuItem>
                                 <MenuItem onClick={handleLogout}
                                 >Выйти из аккаунта</MenuItem>
                             </Menu>
                         </React.Fragment>}
+                        {!isAuthenticated && 
+                        <IconButton className={classes.user}
+                        onClick={e => history.push('/login')}>
+                            <img src={`/user.svg`} 
+                            className={classes.userIcon}/>
+                        </IconButton>}
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   tarif: {
-    marginTop: 20,
+    marginTop: 15,
   },
   radio: {
     marginTop: -4,
