@@ -72,4 +72,4 @@ def distance(pos1, pos2):
 
 # get_adj()
 
-get_lengths()
+# get_lengths()

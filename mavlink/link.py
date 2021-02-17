@@ -160,7 +160,6 @@ class MavlinkListener:
 
         # Message
         # self.set_home(self.latest_pos, self.latest_alt)
-        self.set_home(path[-1], self.latest_alt)
         # msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
         # print('Received message')
         # print(msg)

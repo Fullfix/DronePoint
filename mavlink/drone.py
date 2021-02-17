@@ -35,7 +35,7 @@ class DroneHandler(MongoConnection, MavlinkListener):
         if pos_difference[0] > 5 or pos_difference[1] > 5 or alt_difference >= 1:
             # Update Mongo
             self.update_drone(msg_dict['sysid'], { "pos": pos })
-            print(f'Updated Position to {pos}; alt to {alt}')
+            # print(f'Updated Position to {pos}; alt to {alt}')
             # Update Lasest pos
             self.latest_pos = pos[:]
             self.latest_alt = alt
@@ -149,6 +149,7 @@ class DroneHandler(MongoConnection, MavlinkListener):
         self.update_drone(self.mavconn.target_system, {
             "currentDronepoint": place_to["_id"],
         })
+        self.set_home(place_to["pos"], self.latest_alt)
         self.delivering = False
 
 

@@ -26,6 +26,8 @@ class MavlinkListener:
         self.mavconn = mavutil.mavlink_connection(self.url, source_system=255)
         try:
             self.mavconn2 = mavutil.mavlink_connection(self.url2, source_system=255)
+            self.mavconn2.wait_heartbeat()
+            print('DP CONNECTED')
         except BaseException as e:
             self.mavconn2 = False
             print(e)
@@ -308,4 +310,4 @@ class MavlinkListener:
 
 listener = MavlinkListener()
 
-listener.get_cargo_action()
+# listener.give_cargo_action()

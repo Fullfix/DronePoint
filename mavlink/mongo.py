@@ -40,6 +40,8 @@ class MongoConnection:
     
     def get_from_shelf(self, dronepoint_id, order_id):
         shelf = self.db.dronepoints.find_one({ "_id": dronepoint_id })["shelf"]
+        if order_id not in shelf:
+            return print('No order found in shelf')
         index = shelf.index(order_id)
         self.db.dronepoints.update_one(
             { "_id": dronepoint_id },
@@ -48,6 +50,8 @@ class MongoConnection:
     
     def put_in_shelf(self, dronepoint_id, order_id):
         shelf = self.db.dronepoints.find_one({ "_id": dronepoint_id })["shelf"]
+        if None not in shelf:
+            return print('No empty space found in shelf')
         index = shelf.index(None)
         self.db.dronepoints.update_one(
             { "_id": dronepoint_id },
