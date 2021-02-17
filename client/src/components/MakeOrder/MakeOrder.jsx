@@ -71,8 +71,6 @@ const MakeOrder = () => {
                 const res = await axios.post(`/api/order/create/${isAuthenticated ? 'auth' : 'guest'}`, {
                     placeFrom: placeFrom._id,
                     placeTo: placeTo._id,
-                    distance,
-                    price,
                     tariff,
                     name: comment,
                 });

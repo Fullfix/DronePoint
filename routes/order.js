@@ -9,13 +9,6 @@ require('dotenv/config');
 
 const router = express.Router();
 
-router.get('/all', async (req, res, next) => {
-    const orders = await Order.find({}).populate('placeTo')
-    .populate('placeFrom').populate('user');
-    res.data = orders;
-    return next();
-});
-
 router.get('/me', passport.authenticate('jwt'), async (req, res, next) => {
     const orders = await Order.find({ user: req.user._id }).populate('placeTo')
     .populate('placeFrom').populate('user');
@@ -45,15 +38,15 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
         res.data = { err: "Invalid placeTo: Drone point doesn't exist" };
         return next();
     }
-    if (!req.body.price) {
-        res.data = { err: "Invalid price" };
-        return next();
-    }
-    if (!req.body.distance) {
-        res.data = { err: "Invalid distance" };
-        return next();
-    }
-    if (!req.body.tariff) {
+    // if (!req.body.price) {
+    //     res.data = { err: "Invalid price" };
+    //     return next();
+    // }
+    // if (!req.body.distance) {
+    //     res.data = { err: "Invalid distance" };
+    //     return next();
+    // }
+    if (!req.body.tariff || ![69, 80, 130].includes(req.body.tariff)) {
         res.data = { err: "Tariff missing" };
         return next();
     }
@@ -61,12 +54,14 @@ router.post('/create/auth', passport.authenticate('jwt'), async (req, res, next)
         res.data = { err: 'Too long distance' };
         return next();
     }
+    const distance = jsonDist[placeFrom.name][placeTo.name];
+    const price = parseInt(distance * req.body.tariff)
     const drone = await Drone.findOne();
     const order = new Order({
         placeFrom: placeFrom._id,
         placeTo: placeTo._id,
-        distance: req.body.distance,
-        price: req.body.price,
+        distance: distance,
+        price: price,
         user: req.user._id,
         drone: drone._id,
         tariff: req.body.tariff,
@@ -158,15 +153,15 @@ router.post('/create/guest', async (req, res, next) => {
         res.data = { err: "Invalid placeTo: Drone point doesn't exist" };
         return next();
     }
-    if (!req.body.price) {
-        res.data = { err: "Invalid price" };
-        return next();
-    }
-    if (!req.body.distance) {
-        res.data = { err: "Invalid distance" };
-        return next();
-    }
-    if (!req.body.tariff) {
+    // if (!req.body.price) {
+    //     res.data = { err: "Invalid price" };
+    //     return next();
+    // }
+    // if (!req.body.distance) {
+    //     res.data = { err: "Invalid distance" };
+    //     return next();
+    // }
+    if (!req.body.tariff || ![69, 80, 130].includes(req.body.tariff)) {
         res.data = { err: "Tariff missing" };
         return next();
     }
@@ -174,12 +169,14 @@ router.post('/create/guest', async (req, res, next) => {
         res.data = { err: 'Too long distance' };
         return next();
     }
+    const distance = jsonDist[placeFrom.name][placeTo.name];
+    const price = parseInt(distance * req.body.tariff)
     const drone = await Drone.findOne();
     const order = new Order({
         placeFrom: placeFrom._id,
         placeTo: placeTo._id,
-        distance: req.body.distance,
-        price: req.body.price,
+        distance: distance,
+        price: price,
         drone: drone._id,
         tariff: req.body.tariff,
     });
