@@ -58,14 +58,14 @@ class MavlinkListener:
     
     def dronepoint_action(self, mode):
         try:
-            self.mavconn.mav.command_long_send(
-                self.mavconn.target_system, 
-                self.mavconn.target_component, 
-                mavlink.MAV_CMD_DO_SET_MODE, 
-                1, 
-                mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 
-                mode, 
-                3, 0, 0, 0, 0)
+            # self.mavconn.mav.command_long_send(
+            #     self.mavconn.target_system, 
+            #     self.mavconn.target_component, 
+            #     mavlink.MAV_CMD_DO_SET_MODE, 
+            #     1, 
+            #     mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 
+            #     mode, 
+            #     3, 0, 0, 0, 0)
             print('Dronepoint action executed successfully')
         except BaseException as e:
             print(e)

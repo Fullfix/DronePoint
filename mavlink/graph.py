@@ -26,6 +26,7 @@ def find_path(adjacency_matrix, source_node_index, target_node_index):
     graph = nx.from_numpy_matrix(matrix)
     path = nx.astar_path(graph, source=source_node_index, target=target_node_index)
     length = sum((graph[u][v]["weight"] for u, v in zip(path[:-1], path[1:])))
+    print(path)
     return path, length
 
 def get_path(pos1, pos2):
@@ -54,11 +55,21 @@ def get_points():
         for j in range(len(graph)):
             if (graph[i][j]):
                 graph[i][j] = distance(points['pos'][i], points['pos'][j])
+    # print(graph, points)
     return graph, points
 
 def distance(pos1, pos2):
     return mpu.haversine_distance(pos1, pos2)
 
-# get_lengths()
-# print(get_path([54.333, 48.3945],
-#         [54.31777, 48.39601]))
+# def get_adj():
+#     gr, points = get_points()
+#     A = [[0 for i in range(len(gr))] for j in range(len(gr))]
+#     for d in points['edges']:
+#         A[d[0]][d[1]] = 1
+#         A[d[1]][d[0]] = 1
+#     with open ('mavlink/graph.json', 'w') as f:
+#         json.dump(A, f)
+
+# get_adj()
+
+get_lengths()
