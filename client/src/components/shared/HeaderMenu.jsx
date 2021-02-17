@@ -37,14 +37,15 @@ const useStyles = makeStyles(theme => ({
     user: {
         height: '55px',
         width: '55px',
-        position: 'absolute',
+        position: 'fixed',
+        padding: 0,
         // backgroundColor: '#333333',
         border: 'none',
         right: 10,
     },
     userIcon: {
-        height: '55px',
-        width: '55px',
+        height: '100%',
+        width: '100%',
         color: 'white',
     },
 }))
