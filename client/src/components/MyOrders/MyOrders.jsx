@@ -1,5 +1,5 @@
 import { Divider, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { fetchMyOrders } from '../../utils/api';
 import { formattedDate, statusToText } from '../../utils/display';
 import HeaderMenu from '../shared/HeaderMenu';
@@ -24,11 +24,19 @@ const MyOrders = () => {
     const classes = useStyles();
     const [orders, setOrders] = useState(null);
     const [loading, setLoading] = useState(true);
+    const interval = useRef();
     console.log(orders);
 
     const getInfo = (order) => {
         return `Дата: ${formattedDate(order.createdAt)}`;
     }
+
+    useEffect(() => {
+        interval.current = setInterval(() => {
+            setLoading(true);
+        }, 15000);
+        return () => clearInterval(interval.current);
+    }, []);
 
     useEffect(() => {
         const fetchOrders = async () => {
