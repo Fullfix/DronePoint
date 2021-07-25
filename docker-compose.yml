@@ -1,0 +1,7 @@
+version: '3'
+services:
+  api-server:
+    image: api-server
+    ports: [ '8000:2000' ]
+    env_file: .env
+    build: .
