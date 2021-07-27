@@ -161,7 +161,7 @@ router.post('/create/guest', async (req, res, next) => {
     //     res.data = { err: "Invalid distance" };
     //     return next();
     // }
-    if (!req.body.tariff || ![69, 80, 130].includes(req.body.tariff)) {
+    if (!req.body.tariff || ![69, 59, 109].includes(req.body.tariff)) {
         res.data = { err: "Tariff missing" };
         return next();
     }

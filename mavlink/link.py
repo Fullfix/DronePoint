@@ -72,19 +72,19 @@ class MavlinkListener:
     
     def take_cargo_action(self):
         self.dronepoint_action(self.CUSTOM_MODE_LOADING_DRONE)
-        time.sleep(10)
+        time.sleep(3)
     
     def put_cargo_action(self):
         self.dronepoint_action(self.CUSTOM_MODE_UNLOADING_DRONE)
-        time.sleep(10)
+        time.sleep(3)
     
     def give_cargo_action(self):
         self.dronepoint_action(self.CUSTOM_MODE_UNLOADING_TO_USER)
-        time.sleep(10)
+        time.sleep(3)
     
     def get_cargo_action(self):
         self.dronepoint_action(self.CUSTOM_MODE_GETTING_FROM_USER)
-        time.sleep(10)
+        time.sleep(3)
     
     def mission_exec(self, dpfrom, destination):
         print('Initiating Mission')
@@ -92,20 +92,21 @@ class MavlinkListener:
         # Takeoff
         frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 
-        p = mavlink.MAVLink_mission_item_message(
-            self.mavconn.target_system,
-            self.mavconn.target_component,
-            0,
-            mavlink.MAV_FRAME_MISSION,
-            mavlink.MAV_CMD_DO_CHANGE_SPEED,
-            0,
-            1,
-            0, 30, 0, 0,
-            0,
-            0,
-            0,
-        )
-        wp.add(p)
+        # p = mavlink.MAVLink_mission_item_message(
+        #     self.mavconn.target_system,
+        #     self.mavconn.target_component,
+        #     0,
+        #     mavlink.MAV_FRAME_MISSION,
+        #     mavlink.MAV_CMD_DO_CHANGE_SPEED,
+        #     0,
+        #     1,
+        #     0, 30, 0, 0,
+        #     0,
+        #     0,
+        #     0,
+        # )
+        # wp.add(p)
+        print(self.latest_pos)
 
 
         p = mavlink.MAVLink_mission_item_message(
@@ -123,9 +124,10 @@ class MavlinkListener:
         )
         wp.add(p)
         path = get_path(dpfrom["name"], destination["name"])[1:]
-        print('PATH')
-        print(dpfrom["name"], destination["name"])
-        print(get_path(dpfrom["name"], destination["name"]))
+        print(path[0])
+        # print('PATH')
+        # print(dpfrom["name"], destination["name"])
+        # print(get_path(dpfrom["name"], destination["name"]))
         # Waypoint
         for point in path:
             p = mavlink.MAVLink_mission_item_message(
@@ -158,7 +160,6 @@ class MavlinkListener:
         )
         wp.add(p)
 
-        # Message
         # self.set_home(self.latest_pos, self.latest_alt)
         # msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
         # print('Received message')
@@ -187,21 +188,21 @@ class MavlinkListener:
         wp.clear()
 
 
-        # Speed
-        p = mavlink.MAVLink_mission_item_message(
-            self.mavconn.target_system,
-            self.mavconn.target_component,
-            0,
-            mavlink.MAV_FRAME_MISSION,
-            mavlink.MAV_CMD_DO_CHANGE_SPEED,
-            0,
-            1,
-            0, 100, 0, 0,
-            0,
-            0,
-            0,
-        )
-        wp.add(p)
+        # # Speed
+        # p = mavlink.MAVLink_mission_item_message(
+        #     self.mavconn.target_system,
+        #     self.mavconn.target_component,
+        #     0,
+        #     mavlink.MAV_FRAME_MISSION,
+        #     mavlink.MAV_CMD_DO_CHANGE_SPEED,
+        #     0,
+        #     1,
+        #     0, 100, 0, 0,
+        #     0,
+        #     0,
+        #     0,
+        # )
+        # wp.add(p)
 
         # Takeoff
         frame = mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
@@ -252,7 +253,7 @@ class MavlinkListener:
 
         # Message
         # self.set_home(self.latest_pos, self.latest_alt)
-        self.set_home(destination, self.latest_alt)
+        # self.set_home(destination, self.latest_alt)
         # msg = self.mavconn.recv_match(type=['COMMAND_ACK'], blocking=True)
         # print('Received message')
         # print(msg)

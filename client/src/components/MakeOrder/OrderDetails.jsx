@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 const OrderDetails = ({ placeTo, placeFrom, onSubmit, order, distance, time }) => {
   const classes = useStyles();
-  const [tariff, setTariff] = useState(80);
+  const [tariff, setTariff] = useState(59);
   const [comment, setComment] = useState('');
   const [acc, setAcc] = useState(null);
   const { isAuthenticated } = useContext(UserContext);
