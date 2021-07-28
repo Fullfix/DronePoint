@@ -106,7 +106,10 @@ class MavlinkListener:
         #     0,
         # )
         # wp.add(p)
-        print(self.latest_pos)
+
+        path = get_path(dpfrom["name"], destination["name"])[1:]
+        print(path[0])
+        print(path[1])
 
 
         p = mavlink.MAVLink_mission_item_message(
@@ -118,13 +121,11 @@ class MavlinkListener:
             0,
             1,
             15, 0, 0, math.nan,
-            self.latest_pos[0],
-            self.latest_pos[1],
+            path[0][0],
+            path[0][1],
             20,
         )
         wp.add(p)
-        path = get_path(dpfrom["name"], destination["name"])[1:]
-        print(path[0])
         # print('PATH')
         # print(dpfrom["name"], destination["name"])
         # print(get_path(dpfrom["name"], destination["name"]))
@@ -179,7 +180,6 @@ class MavlinkListener:
         # print(msg)
 
         # Start Mission
-        time.sleep(1)
         self.mavconn.set_mode_auto()
         print('Started Mission')
 

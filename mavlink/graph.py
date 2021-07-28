@@ -26,7 +26,6 @@ def find_path(adjacency_matrix, source_node_index, target_node_index):
     graph = nx.from_numpy_matrix(matrix)
     path = nx.astar_path(graph, source=source_node_index, target=target_node_index)
     length = sum((graph[u][v]["weight"] for u, v in zip(path[:-1], path[1:])))
-    print(path)
     return path, length
 
 def get_path(pos1, pos2):
@@ -35,7 +34,6 @@ def get_path(pos1, pos2):
     i1 = name_to_point[pos1]
     i2 = name_to_point[pos2]
     path, l = find_path(graph, i1, i2)
-    print(path)
     return list(map(lambda x: points[x], path))
 
 def get_path_l(pos1, pos2):

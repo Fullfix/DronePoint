@@ -1,5 +1,6 @@
 const { response } = require('express');
 const nodemailer = require('nodemailer');
+require('dotenv/config')
 
 exports.sendMail = async (user) => {
     const account = nodemailer.createTransport({
@@ -7,7 +8,7 @@ exports.sendMail = async (user) => {
         port: '465',
         auth: {
             user: 'delidrone@mail.ru',
-            pass: 'govnopoints2021',
+            pass: process.env.MAIL_PWD,
         },
         secure: true,
         debug: true,

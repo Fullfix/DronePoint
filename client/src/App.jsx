@@ -98,7 +98,7 @@ function App() {
             </Helmet>
             <Box bgcolor="#E5E5E5" style={{ overflow: 'hidden' }}>
               <Container maxWidth="sm" style={{ padding: 0, overflow: 'hidden' }}>
-                <Box bgcolor="white" height="100vh" style={{ overflow: 'hidden' }}>
+                <Box bgcolor="white" height="100vh">
                   <Router>
                     <Box className={classes.box} style={{
                       height: size.height - 56,

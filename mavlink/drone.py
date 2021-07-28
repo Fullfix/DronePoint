@@ -13,6 +13,7 @@ from pymavlink.mavutil import mavlink
 from mongo import MongoConnection
 from link import MavlinkListener
 import math
+import bson
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,6 +24,9 @@ class DroneHandler(MongoConnection, MavlinkListener):
     def __init__(self):
         MavlinkListener.__init__(self)
         MongoConnection.__init__(self)
+        self.update_drone(self.mavconn.target_system, {
+            "currentDronepoint": bson.objectid.ObjectId('5fd0e8f306476c2e4139adb9'),
+        })
     
     def GLOBAL_POSITION_INT_HANDLER(self, msg_dict):
         # Get GPS Position
